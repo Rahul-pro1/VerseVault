@@ -32,6 +32,4 @@ app.get('/', async (req, res) => {
     return res.json(records);
 })
 
-app.listen(process.env.PORT, () => {
-    console.log(`Listening on port ${process.env.PORT}...`)
-})
+export {app}

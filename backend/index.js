@@ -1,7 +1,10 @@
 import mysql from 'mysql2'
 import dotenv from 'dotenv'
+import {app} from './app.js'
 
-dotenv.config()
+dotenv.config({
+    path: './.env'
+})
 
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST,
@@ -15,4 +18,8 @@ export async function getCustomers() {
     return records
 }
 
+const port_val = process.env.PORT || 8080
 
+app.listen( port_val, () => {
+    console.log(`App is running on ${port_val}`);
+} )
