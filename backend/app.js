@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'
-import { getCustomers } from './index.js';
+import { getCustomers,registration } from './controllers/user.controllers.js';
 
 dotenv.config()
 
@@ -27,9 +27,10 @@ app.use(express.static("public")) //For any other files like images etc, same na
 
 app.use(cookieParser()) 
 
-app.get('/', async (req, res) => {
-    const records = await getCustomers();
-    return res.json(records);
-})
+// -------------------------------------------------------------------------------------------------------------------------------------
+
+import { userRouter } from './routers/user.routes.js';
+
+app.use('/api/v1/users',userRouter)
 
 export {app}

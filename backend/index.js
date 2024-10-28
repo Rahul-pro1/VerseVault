@@ -13,13 +13,13 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise()
 
-export async function getCustomers() { 
-    const [records] = await pool.query("select * from customer")
-    return records
-}
+console.log(`Pool ${pool}`);
+
 
 const port_val = process.env.PORT || 8080
 
 app.listen( port_val, () => {
     console.log(`App is running on ${port_val}`);
 } )
+
+export {pool}
