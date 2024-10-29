@@ -11,6 +11,7 @@ const Home = () => {
           <div className="space-x-6">
             <Link to="/register" className="book-link">Register</Link>
             <Link to="/login" className="book-link">Login</Link>
+            <Link to="/search" className="book-link">Search</Link>
             <a href="#contact" className="book-link">Contact</a>
             <a href="#help" className="book-link">Help</a>
           </div>
