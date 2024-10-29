@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCustomers,registration } from '../controllers/user.controllers.js';
+import { getCustomers,userRegistration } from '../controllers/user.controllers.js';
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 
@@ -11,7 +11,7 @@ userRouter.route('/').get( asyncHandler( async (req,res) => {
 } ) )
 
 userRouter.route('/register').post( upload.single("profile"), asyncHandler( async (req,res) => {
-    registration(req,res)
+    userRegistration(req,res)
 } ) )
 
 export {userRouter}

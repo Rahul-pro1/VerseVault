@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
 
-  const [customer_username, setCustomer_username] = useState("")
-  const [customer_email, setCustomer_email] = useState("")
-  const [customer_password, setCustomer_password] = useState("")
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [user_password, setUser_password] = useState("")
   const [confirm_password, setConfirm_password] = useState("")
+  const [contact, setContact] = useState("")
   const [profile, setProfile] = useState(null)
 
   async function handleSubmit(e){
@@ -16,11 +17,13 @@ const Register = () => {
 
     const formData = new FormData();
 
-    formData.append("customer_username",customer_username)
-    formData.append("customer_email",customer_email)
-    formData.append("customer_password",customer_password)
+    formData.append("username",username)
+    formData.append("email",email)
+    formData.append("user_password",user_password)
     formData.append("confirm_password",confirm_password)
+    formData.append("contact", contact)
     formData.append("profile", profile)
+    formData.append("isVendor",false)
 
     try {
       const response = await axios.post("/api/v1/users/register", formData)
@@ -68,21 +71,21 @@ const Register = () => {
               placeholder="Your Name" 
               name='customer_username'
               className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setCustomer_username(e.target.value) }
+              onChange={ (e) => setUsername(e.target.value) }
             />
             <input 
               type="email" 
               placeholder="Email Address" 
               name='customer_email'
               className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setCustomer_email(e.target.value) }
+              onChange={ (e) => setEmail(e.target.value) }
             />
             <input 
               type="password" 
               placeholder="Password" 
               name='customer_password'
               className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setCustomer_password(e.target.value) }
+              onChange={ (e) => setUser_password(e.target.value) }
             />
             <input 
               type="password" 
@@ -90,6 +93,13 @@ const Register = () => {
               name='confirm_password'
               className="w-full p-3 rounded bg-gray-700 text-white"
               onChange={ (e) => setConfirm_password(e.target.value) }
+            />
+            <input 
+              type="text" 
+              placeholder="Contact Number" 
+              name='customer_contact'
+              className="w-full p-3 rounded bg-gray-700 text-white"
+              onChange={ (e) => setContact(e.target.value) }
             />
             {/* Custom file upload styling */}
             <label className="w-full flex flex-col items-center px-4 py-3 bg-gray-700 text-white rounded cursor-pointer">

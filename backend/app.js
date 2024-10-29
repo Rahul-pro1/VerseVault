@@ -2,7 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'
-import { getCustomers,registration } from './controllers/user.controllers.js';
 
 dotenv.config()
 
