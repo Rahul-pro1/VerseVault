@@ -6,6 +6,7 @@ axios.defaults.withCredentials = true; // Enable cookies for cross-origin reques
 
 const Register = () => {
 
+  const [isVendor, setIsVendor] = useState(false)
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [user_password, setUser_password] = useState("")
@@ -25,14 +26,18 @@ const Register = () => {
     formData.append("confirm_password",confirm_password)
     formData.append("contact", contact)
     formData.append("profile", profile)
-    formData.append("isVendor",false)
+    formData.append("isVendor", isVendor)
 
     try {
+<<<<<<< HEAD
       const response = await axios.post("/api/v1/users/register", formData, 
         {
           withCredentials:true
         })
   
+=======
+      const response = await axios.post("/api/v1/users/register", formData)
+>>>>>>> 931cf9ce276459c582570f932ce50f5aec81aec7
       console.log(response.data);
   
     } catch (error) {
@@ -46,7 +51,7 @@ const Register = () => {
       {/* Navigation Header */}
       <nav className="bg-black py-6 shadow-md">
         <div className="container mx-auto flex justify-between items-center px-6">
-          <h1 className="text-2xl font-bold">Online Bookstore</h1>
+          <h1 className="text-2xl font-bold">VerseVault</h1>
           <div className="space-x-6">
             <Link to="/" className="book-link">Home</Link>
             <Link to="/register" className="book-link">Register</Link>
@@ -66,6 +71,28 @@ const Register = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-purple-700 to-blue-800 opacity-70"></div>
 
         <div className="relative z-10 bg-gray-800 rounded-lg shadow-xl p-8 max-w-md w-full mx-auto">
+          <nav className="bg-gray py-6 shadow-md">
+          <div className="container mx-auto flex justify-between items-center px-6">
+            <div className="space-x-6">
+            <span class="sm:ml-3">
+      <button type="button" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+        </svg>
+        Customer
+      </button>
+    </span>
+    <span>
+    <button type="button" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+        </svg>
+        Book Vendor
+      </button>
+    </span>
+            </div>
+          </div>
+        </nav>
           <h2 className="text-4xl font-bold mb-4 text-purple-300">Create Your Account</h2>
           <p className="text-gray-300 mb-6">Join us to explore and save your favorite books.</p>
 
