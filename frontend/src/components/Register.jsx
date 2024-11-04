@@ -29,15 +29,7 @@ const Register = () => {
     formData.append("isVendor", isVendor)
 
     try {
-<<<<<<< HEAD
-      const response = await axios.post("/api/v1/users/register", formData, 
-        {
-          withCredentials:true
-        })
-  
-=======
       const response = await axios.post("/api/v1/users/register", formData)
->>>>>>> 931cf9ce276459c582570f932ce50f5aec81aec7
       console.log(response.data);
   
     } catch (error) {

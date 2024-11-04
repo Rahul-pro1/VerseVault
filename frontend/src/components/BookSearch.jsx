@@ -15,20 +15,8 @@ function BookSearch() {
     let empty = str_array.join("+").toLowerCase();
 
     try {
-<<<<<<< HEAD
-      let response = await axios.get(url1 + empty);
-
-      console.log(response);
-      
-      let booksData = response.data.docs.map((book) => ({
-        title: book.title,
-        author: book.author_name ? book.author_name[0] : "Unknown",
-        cover: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : null,
-      }));
-=======
       let response = await axios.get('/api/v1/books', { query });
       let booksData = response.data
->>>>>>> 931cf9ce276459c582570f932ce50f5aec81aec7
       setBooks(booksData);
     } catch (error) {
       console.error("Error fetching data:", error);
