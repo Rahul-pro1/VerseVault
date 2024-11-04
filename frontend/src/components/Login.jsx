@@ -1,7 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from "axios";
 
 const Login = () => {
+
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
+  async function handleLogin(e){
+
+    e.preventDefault()
+
+    const loginInfo={
+      "username":username,
+      "password":password
+    }
+
+    try {
+      const response = await axios.post("/api/v1/users/login", loginInfo, 
+        {
+          withCredentials:true
+        }
+      )
+  
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       {/* Navigation Header */}
@@ -30,15 +57,19 @@ const Login = () => {
           <h2 className="text-4xl font-bold mb-4 text-purple-300">Welcome Back</h2>
           <p className="text-gray-300 mb-6">Log in to access your account and explore your favorite books.</p>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleLogin}>
             <input 
-              type="email" 
-              placeholder="Email Address" 
+              type="username" 
+              placeholder="Enter Username" 
+              name="username"
+              onChange={ (e) => {setUsername(e.target.value)} }
               className="w-full p-3 rounded bg-gray-700 text-white"
             />
             <input 
               type="password" 
               placeholder="Password" 
+              name="password"
+              onChange={ (e) => {setPassword(e.target.value)} }
               className="w-full p-3 rounded bg-gray-700 text-white"
             />
             <button 
@@ -50,7 +81,7 @@ const Login = () => {
           </form>
 
           <p className="text-gray-400 mt-4">
-            Don’t have an account? 
+            Don't have an account? 
             <Link to="/register" className="text-blue-300 hover:underline ml-1">Register here</Link>.
           </p>
         </div>

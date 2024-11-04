@@ -87,7 +87,34 @@ async function userRegistration(req, res) {
     }
 
     return res.status(200).json({ success: true });
+}
+
+async function userLogin(req, res) {
+    const { username, password } = req.body;
+
+    console.log(username, password);
+
+    if (!(username && password)) {
+        return res.status(400).json({ success: false, message: 'Credentials not entered!' });
     }
 
+    const [user] = await pool.query(`SELECT * FROM customer WHERE customer_username = ?`, [username]);
 
-export {getCustomers, userRegistration}
+    if (!user || user.length === 0) {
+        return res.status(404).json({ success: false, message: "User doesn't exist!" });
+    }
+
+    // Check if user exists and compare passwords
+    const valid_user = await bcryptjs.compare(password, user[0].customer_password);
+
+    if (!valid_user) {
+        return res.status(401).json({ success: false, message: 'Username or password is incorrect!' });
+    }
+
+    // Store user in session
+    req.session.user = username;
+
+    return res.status(200).json({ success: true });
+}
+
+export {getCustomers, userRegistration, userLogin}

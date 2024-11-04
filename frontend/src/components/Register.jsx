@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+axios.defaults.withCredentials = true; // Enable cookies for cross-origin requests
+
 const Register = () => {
 
   const [username, setUsername] = useState("")
@@ -26,7 +28,10 @@ const Register = () => {
     formData.append("isVendor",false)
 
     try {
-      const response = await axios.post("/api/v1/users/register", formData)
+      const response = await axios.post("/api/v1/users/register", formData, 
+        {
+          withCredentials:true
+        })
   
       console.log(response.data);
   

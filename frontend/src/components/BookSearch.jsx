@@ -17,6 +17,9 @@ function BookSearch() {
 
     try {
       let response = await axios.get(url1 + empty);
+
+      console.log(response);
+      
       let booksData = response.data.docs.map((book) => ({
         title: book.title,
         author: book.author_name ? book.author_name[0] : "Unknown",
@@ -40,7 +43,7 @@ function BookSearch() {
           Discover a world of books by searching for your favorite title or author.
         </p>
 
-        <form onSubmit={handleSearch} className="flex space-x-2">
+        <form onSubmit={handleSearch} className="flex space-x-2 pl-28">
           <input
             type="text"
             placeholder="Search for books..."
