@@ -1,27 +1,6 @@
 USE versevault;
 
-CREATE TABLE customer (
-    customer_username VARCHAR(20) PRIMARY KEY,
-    customer_name VARCHAR(30) NOT NULL,
-    customer_email VARCHAR(50) NOT NULL,
-    customer_contact VARCHAR(15) NOT NULL,
-    customer_password VARCHAR(80) NOT NULL,
-    profile VARCHAR(100)
-);
-
-CREATE TABLE vendor (
-    vendor_id VARCHAR(20) PRIMARY KEY,
-    vendor_name VARCHAR(30) NOT NULL,
-    vendor_email VARCHAR(50) NOT NULL,
-    vendor_contact VARCHAR(15) NOT NULL,
-    vendor_password VARCHAR(80) NOT NULL 
-);
-
-CREATE TABLE admin (
-    admin_username VARCHAR(20) PRIMARY KEY,
-    admin_name VARCHAR(30) NOT NULL,
-    admin_password VARCHAR(80) NOT NULL
-);
+alter table vendor add column vendor_id varchar(20) PRIMARY KEY;
 
 CREATE TABLE books (
     book_id VARCHAR(10) PRIMARY KEY,

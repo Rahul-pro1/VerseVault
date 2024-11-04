@@ -111,8 +111,11 @@ async function userLogin(req, res) {
         return res.status(401).json({ success: false, message: 'Username or password is incorrect!' });
     }
 
-    // Store user in session
-    req.session.user = username;
+    if(req.session.user !== username){
+        console.log("In IF!");
+        
+        req.session.user = username;
+    }
 
     return res.status(200).json({ success: true });
 }
