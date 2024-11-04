@@ -12,16 +12,11 @@ function BookSearch() {
     setBooks([]);      // Clear previous results
 
     let str_array = query.split(" ");
-    let url1 = `https://openlibrary.org/search.json?q=`;
     let empty = str_array.join("+").toLowerCase();
 
     try {
-      let response = await axios.get(url1 + empty);
-      let booksData = response.data.docs.map((book) => ({
-        title: book.title,
-        author: book.author_name ? book.author_name[0] : "Unknown",
-        cover: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : null,
-      }));
+      let response = await axios.get('/api/v1/books', { query });
+      let booksData = response.data
       setBooks(booksData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -31,7 +26,20 @@ function BookSearch() {
   };
 
   return (
+    
     <div className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-[url('/search.jpg')]">
+      <nav className="bg-black py-6 shadow-md">
+        <div className="container mx-auto flex justify-between items-center px-6">
+          <h1 className="text-2xl font-bold">VerseVault</h1>
+          <div className="space-x-6">
+            <Link to="/" className="book-link">Home</Link>
+            <Link to="/register" className="book-link">Register</Link>
+            <Link to="/login" className="book-link">Login</Link>
+            <a href="#contact" className="book-link">Contact</a>
+            <a href="#help" className="book-link">Help</a>
+          </div>
+        </div>
+      </nav>
       <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-purple-900 opacity-80"></div>
 
       <div className="relative z-10 text-center text-white p-8">
