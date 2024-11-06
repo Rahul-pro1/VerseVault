@@ -54,6 +54,7 @@ const sessionStore = new MySQLStore({
 }, pool); // Pass the pool instance here
 
 app.use(session({
+    name: "cookies",
     key:process.env.SESSION_KEY,
     secret: process.env.SESSION_SECRET,
     resave: false,

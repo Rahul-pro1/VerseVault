@@ -111,13 +111,64 @@ async function userLogin(req, res) {
         return res.status(401).json({ success: false, message: 'Username or password is incorrect!' });
     }
 
+    console.log(`In Login, checking user ${req.session.user}`);
+
     if(req.session.user !== username){
         console.log("In IF!");
         
         req.session.user = username;
+
+        console.log(`After login ${req.session.user}`);
     }
 
     return res.status(200).json({ success: true });
 }
 
-export {getCustomers, userRegistration, userLogin}
+async function userLogout(req,res) {
+
+    console.log(`In logout`);
+
+    if(req.session){
+        console.log(`In Logout checking req.session ${req.session.user}`);
+        req.session.destroy( (err) => {
+            if(err){
+                return res.status(500).send(`Failed to log out!`)
+            }
+
+            console.log(`After logout ${req.session}`);
+
+            return res
+            .status(200)
+            .clearCookie('cookie')
+            .json({"success":true})
+        } )
+    }
+    else{
+        return res
+        .send(`Could not log out user`)
+    }
+        
+}
+
+async function shoppingCart(req,res){
+    const {book_id} = req.body
+
+    if(!book_id){
+        console.log(`book is not received!`);
+        return res.status(400).send(`book is not received!`)
+    }
+
+    console.log(`Book is ${book_id}`);
+
+    if(!req.session.book){
+        req.session.book = []
+    }
+
+    req.session.book.push(book_id)
+
+    return res
+    .status(200)
+    .json({"success":true})
+}
+
+export {getCustomers, userRegistration, userLogin, userLogout, shoppingCart}
