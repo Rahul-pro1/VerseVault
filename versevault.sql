@@ -9,9 +9,9 @@ CREATE TABLE books (
     genre VARCHAR(30) NOT NULL,
     plot VARCHAR(2000) NOT NULL,
     book_price DECIMAL(10, 2) NOT NULL,
-    vendor_id VARCHAR(20),
+    vendor_username VARCHAR(20),
     book_cover varchar(100),
-    FOREIGN KEY (vendor_id) REFERENCES vendor(vendor_id)
+    FOREIGN KEY (vendor_username) REFERENCES vendor(vendor_username)
 );
 
 CREATE TABLE reviews (

@@ -98,14 +98,26 @@ async function userLogin(req, res) {
         return res.status(400).json({ success: false, message: 'Credentials not entered!' });
     }
 
-    const [user] = await pool.query(`SELECT * FROM customer WHERE customer_username = ?`, [username]);
+    const [customer] = await pool.query(`SELECT * FROM customer WHERE customer_username = ?`, [username]);
+    const [vendor] = await pool.query(`SELECT * FROM vendor WHERE vendor_username = ?`, [username]);
+    const [admin] = await pool.query(`SELECT * FROM admin WHERE admin_username = ?`, [username]);
+    let user=""
+    let valid_user;
 
-    if (!user || user.length === 0) {
-        return res.status(404).json({ success: false, message: "User doesn't exist!" });
+    console.log(customer, vendor, admin);
+
+    if(customer.length!==0){
+        user="customer"
+        valid_user = await bcryptjs.compare(password, customer[0].customer_password);
     }
-
-    // Check if user exists and compare passwords
-    const valid_user = await bcryptjs.compare(password, user[0].customer_password);
+    else if(vendor.length!==0){
+        user="vendor"
+        valid_user = await bcryptjs.compare(password, vendor[0].vendor_password);
+    }
+    else{
+        user="admin"
+        valid_user = await bcryptjs.compare(password, admin[0].admin_password);
+    }   
 
     if (!valid_user) {
         return res.status(401).json({ success: false, message: 'Username or password is incorrect!' });
@@ -117,6 +129,7 @@ async function userLogin(req, res) {
         console.log("In IF!");
         
         req.session.user = username;
+        req.session.role = user;
 
         console.log(`After login ${req.session.user}`);
     }
@@ -124,30 +137,27 @@ async function userLogin(req, res) {
     return res.status(200).json({ success: true });
 }
 
-async function userLogout(req,res) {
+async function userLogout(req, res) {
+    console.log(`In logout ${req.session.user}`);
 
-    console.log(`In logout`);
-
-    if(req.session){
+    if (req.session && req.session.user) {
         console.log(`In Logout checking req.session ${req.session.user}`);
-        req.session.destroy( (err) => {
-            if(err){
-                return res.status(500).send(`Failed to log out!`)
+        
+        req.session.destroy((err) => {
+            if (err) {
+                return res.status(500).send('Failed to log out!');
             }
 
             console.log(`After logout ${req.session}`);
 
             return res
-            .status(200)
-            .clearCookie('cookie')
-            .json({"success":true})
-        } )
+                .status(200)
+                .clearCookie('cookies') // Use the correct session cookie name
+                .json({ success: true });
+        });
+    } else {
+        return res.status(400).send('User is not logged in or session does not exist');
     }
-    else{
-        return res
-        .send(`Could not log out user`)
-    }
-        
 }
 
 async function shoppingCart(req,res){
@@ -171,4 +181,17 @@ async function shoppingCart(req,res){
     .json({"success":true})
 }
 
-export {getCustomers, userRegistration, userLogin, userLogout, shoppingCart}
+async function admin(req,res){
+    const {username, password} = req.body
+
+    const hashed = await bcryptjs.hash(password, 12)
+
+    const query = await pool.query(`insert into admin values(?,?)`,[username, hashed])
+
+    console.log([query])
+
+    return res
+    .send("admin added")
+}
+
+export {getCustomers, userRegistration, userLogin, userLogout, shoppingCart, admin}

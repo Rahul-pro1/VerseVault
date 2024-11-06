@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getCustomers,userLogin,userLogout,userRegistration,shoppingCart } from '../controllers/user.controllers.js';
+import { getCustomers,userLogin,userLogout,userRegistration,shoppingCart, admin } from '../controllers/user.controllers.js';
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
 import { upload } from "../middlewares/multer.middlewares.js";
-import { isLogin } from "../middlewares/checkLogin.middlewares.js";
+import { checkAdmin, isLogin } from "../middlewares/auth.middlewares.js";
 
 const userRouter = Router()
 // const upload = multer()
@@ -26,5 +26,14 @@ userRouter.route('/logout').post( asyncHandler( async (req,res) => {
 userRouter.route('/shopping').post( isLogin, asyncHandler( async (req,res) => {
     shoppingCart(req,res)
 } ) )
+
+userRouter.route('/protected').get(isLogin, checkAdmin, asyncHandler( async (req,res) => {
+    console.log(`In protected route!`);
+    
+} ))
+
+userRouter.route('/admin').post(asyncHandler( async (req,res) => {
+    admin(req,res)
+}))
 
 export {userRouter}
