@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import Nav from "./Nav";
 
 function BookSearch() {
   const [query, setQuery] = useState("");
@@ -27,22 +27,14 @@ function BookSearch() {
   };
 
   return (
-    
-    <div className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-[url('/search.jpg')]">
-      <nav className="bg-black py-6 shadow-md">
-        <div className="container mx-auto flex justify-between items-center px-6">
-          <h1 className="text-2xl font-bold">VerseVault</h1>
-          <div className="space-x-6">
-            <Link to="/" className="book-link">Home</Link>
-            <Link to="/register" className="book-link">Register</Link>
-            <Link to="/login" className="book-link">Login</Link>
-            <a href="#contact" className="book-link">Contact</a>
-            <a href="#help" className="book-link">Help</a>
-          </div>
-        </div>
-      </nav>
+    <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+      <Nav/>
+      <section 
+        className="flex-grow flex items-center justify-center text-center py-20 bg-cover bg-center relative"
+        style={{ backgroundImage: `url('/library.jpg')` }} // Replace with correct path to your uploaded image
+      >
+    <div className="flex flex-col items-center justify-center min-h-screen bg-center bg-[url('/search.jpg')]">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-purple-900 opacity-80"></div>
-
       <div className="relative z-10 text-center text-white p-8">
         <h2 className="text-3xl font-bold mb-4">Find Your Next Book</h2>
         <p className="text-gray-300 mb-8">
@@ -102,6 +94,8 @@ function BookSearch() {
           </div>
         )}
       </div>
+    </div>
+    </section>
     </div>
   );
 }

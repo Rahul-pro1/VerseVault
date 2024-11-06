@@ -6,6 +6,7 @@ import Home from './components/Home'
 import Register from './components/Register'
 import Login from './components/Login'
 import BookSearch from './components/BookSearch'
+import Cart from './components/Cart'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path='/register' element={<Register/>}/>
         <Route path='/login' element={<Login/>}/>
+        <Route path='/cart' element={<Cart/>}/>
       </Routes>
       </Router>
     </>
