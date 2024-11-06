@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Nav from './Nav.jsx'
 
 axios.defaults.withCredentials = true; // Enable cookies for cross-origin requests
 
@@ -40,19 +41,7 @@ const Register = () => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
-      {/* Navigation Header */}
-      <nav className="bg-black py-6 shadow-md">
-        <div className="container mx-auto flex justify-between items-center px-6">
-          <h1 className="text-2xl font-bold">VerseVault</h1>
-          <div className="space-x-6">
-            <Link to="/" className="book-link">Home</Link>
-            <Link to="/register" className="book-link">Register</Link>
-            <Link to="/login" className="book-link">Login</Link>
-            <a href="#contact" className="book-link">Contact</a>
-            <a href="#help" className="book-link">Help</a>
-          </div>
-        </div>
-      </nav>
+      <Nav/>
 
       {/* Register Form Section with Background Image */}
       <section 
