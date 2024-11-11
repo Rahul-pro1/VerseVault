@@ -12,11 +12,14 @@ function BookSearch() {
     setLoading(true);  // Start loading
     setBooks([]);      // Clear previous results
 
-    let str_array = query.split(" ");
-    let empty = str_array.join("+").toLowerCase();
+    const query = new FormData()
+
+    query.append("query", query)
+    // let str_array = query.split(" ");
+    // let empty = str_array.join("+").toLowerCase();
 
     try {
-      let response = await axios.get('/api/v1/books', { query });
+      let response = await axios.get('/api/v1/books', query);
       let booksData = response.data
       setBooks(booksData);
     } catch (error) {

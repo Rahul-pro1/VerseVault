@@ -7,7 +7,9 @@ import Register from './components/Register'
 import Login from './components/Login'
 import BookSearch from './components/BookSearch'
 import Cart from './components/Cart'
+import View from './components/View'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import NewBook from './components/NewBook'
 
 export default function App() {
   return (
@@ -19,6 +21,8 @@ export default function App() {
         <Route path='/register' element={<Register/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/cart' element={<Cart/>}/>
+        <Route path='/view/:id' element={<View/>}/>
+        <Route path='/new' element={<NewBook/>}/>
       </Routes>
       </Router>
     </>

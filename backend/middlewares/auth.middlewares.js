@@ -25,4 +25,15 @@ const checkAdmin = asyncHandler(async( req,res,next ) => {
     .send(`user ${admin[0].admin_username}`)
 } )
 
-export {isLogin, checkAdmin}
+const checkVendor = asyncHandler(async( req,res,next ) => {
+    const {username} = req.body
+
+    const [vendor] = await pool.query(`select * from vendor where vendor_username=?`,[username])
+
+    console.log(`vendor ${vendor[0].vendor_username}`);
+
+    return res
+    .send(`user ${vendor[0].vendor_username}`)
+} )
+
+export {isLogin, checkAdmin, checkVendor}
