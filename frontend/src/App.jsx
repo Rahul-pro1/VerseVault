@@ -10,10 +10,13 @@ import Cart from './components/Cart'
 import View from './components/View'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import NewBook from './components/NewBook'
+import { MyContext } from './MyContext'
 
 export default function App() {
+  const [user, setUser] = useState({})
+
   return (
-    <>
+    <MyContext.Provider value={{ user, setUser }}>
       <Router>
       <Routes>
         <Route path="/search" element={<BookSearch/>}/>
@@ -25,6 +28,6 @@ export default function App() {
         <Route path='/new' element={<NewBook/>}/>
       </Routes>
       </Router>
-    </>
+    </MyContext.Provider>
   )
 }

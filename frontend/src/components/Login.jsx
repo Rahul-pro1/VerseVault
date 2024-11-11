@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import Nav from './Nav';
+import { useContext } from 'react';
+import { MyContext } from './MyContext';
 
 const Login = () => {
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+
+  const [user, setUser] = useContext(MyContext)
 
   async function handleLogin(e){
 
@@ -25,6 +29,7 @@ const Login = () => {
       )
   
       console.log(response.data);
+      setUser(response.data)
     } catch (error) {
       console.log(error);
     }
