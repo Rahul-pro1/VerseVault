@@ -10,13 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@reduxjs/toolkit": "^2.3.0",
-=======
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.1.5",
     "@tailwindcss/aspect-ratio": "^0.4.2",
->>>>>>> 2c79453b92f4693bbd21a6f2c98433f35d83ea7b
     "axios": "^1.7.7",
     "multer": "^1.4.5-lts.1",
     "react": "^18.3.1",

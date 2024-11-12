@@ -1,14 +1,7 @@
 import {pool} from "../index.js"
 
 async function bookSearch(req,res) {
-<<<<<<< HEAD
-
-    console.log(`In book search`);
-
-    const { search } = req.body;
-=======
     const { search } = req.body
->>>>>>> 2c79453b92f4693bbd21a6f2c98433f35d83ea7b
     const [records] = await pool.query(`select * from books where title = ?`, [search])
     const [records_author] = await pool.query(`select * from books where author = ?`, [search])
     return res.json(records + records_author)

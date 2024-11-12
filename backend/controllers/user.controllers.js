@@ -136,11 +136,7 @@ async function userLogin(req, res) {
         console.log(`After login ${req.session.user}`);
     }
 
-<<<<<<< HEAD
-    return res.status(200).json({ success: "User logged in!" });
-=======
     return res.status(200).json({ user: req.session.user, role: req.session.role, success: true });
->>>>>>> 2c79453b92f4693bbd21a6f2c98433f35d83ea7b
 }
 
 async function userLogout(req, res) {
