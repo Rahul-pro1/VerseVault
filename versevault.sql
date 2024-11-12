@@ -4,14 +4,15 @@ alter table vendor add column vendor_id varchar(20) PRIMARY KEY;
 
 CREATE TABLE books (
     book_id VARCHAR(10) PRIMARY KEY,
-    title VARCHAR(50) NOT NULL,
+    title VARCHAR(50) NOT NULL UNIQUE,
     author VARCHAR(20) NOT NULL,
     genre VARCHAR(30) NOT NULL,
     plot VARCHAR(2000) NOT NULL,
     book_price DECIMAL(10, 2) NOT NULL,
     vendor_username VARCHAR(20),
     book_cover varchar(100),
-    FOREIGN KEY (vendor_username) REFERENCES vendor(vendor_username)
+    FOREIGN KEY (vendor_username) REFERENCES vendor(vendor_username),
+    copies INT
 );
 
 CREATE TABLE reviews (
