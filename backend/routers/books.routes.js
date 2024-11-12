@@ -13,8 +13,8 @@ booksRouter.route('/:id').get( asyncHandler( async (req,res) => {
     viewBook(req, res);
 } ) )
 
-booksRouter.route('/new').post(checkVendor, asyncHandler( async (req,res) => {
-    newBook(req, res);
-} ) )
+// booksRouter.route('/new').post(checkVendor, asyncHandler( async (req,res) => {
+//     newBook(req, res);
+// } ) )
 
 export { booksRouter }

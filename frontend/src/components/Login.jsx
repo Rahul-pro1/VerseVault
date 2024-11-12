@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import Nav from './Nav';
 import { useContext } from 'react';
-import { MyContext } from './MyContext';
+import { MyContext } from '../MyContext.js';
 
 const Login = () => {
 
