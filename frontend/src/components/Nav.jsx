@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 const Nav = () => {
+
     return (
         <nav className="bg-black py-6 shadow-md">
             <div className="container mx-auto flex justify-between items-center px-6">
@@ -11,7 +12,6 @@ const Nav = () => {
                 <Link to="/login" className="book-link">Login</Link>
                 <Link to="/search" className="book-link">Search</Link>
                 <Link to="/cart" className="book-link">Cart</Link>
-                <a href="#contact" className="book-link">Contact</a>
             </div>
             </div>
         </nav>

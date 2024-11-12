@@ -4,11 +4,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import session from 'express-session';
-// import MySQLStore from 'express-mysql-session';
 import mysqlSession from 'express-mysql-session';
 import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-
 
 const MySQLStore = mysqlSession(session);
 

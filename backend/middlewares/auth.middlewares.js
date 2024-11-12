@@ -6,6 +6,7 @@ const isLogin = asyncHandler( async (req,res,next) => {
     console.log(`In isLogin middleware`);
 
     if(req.session && req.session.user){
+        console.log(`Logged In!`)
         return next()
     }
     else{

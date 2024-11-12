@@ -3,12 +3,14 @@ import bcryptjs from "bcryptjs"
 import validator from "validator";
 import { uploadOnCloudinary } from "../utils/cloudinary.utils.js";
 
-async function getCustomers(req,res) { 
-    console.log(`In getCustomers`);
-    
-    const [records] = await pool.query("select * from customer")
+async function getUser(req,res) { 
+    const username = req.session.user
+    const role = req.session.role
 
-    return res.json(records)
+    console.log(`Username and role ${username}, ${role}`);
+
+    return res. 
+    json({username:username, role: role})
 }
 
 async function userRegistration(req, res) {
@@ -134,7 +136,7 @@ async function userLogin(req, res) {
         console.log(`After login ${req.session.user}`);
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: "User logged in!" });
 }
 
 async function userLogout(req, res) {
@@ -194,4 +196,4 @@ async function admin(req,res){
     .send("admin added")
 }
 
-export {getCustomers, userRegistration, userLogin, userLogout, shoppingCart, admin}
+export {getUser, userRegistration, userLogin, userLogout, shoppingCart, admin}

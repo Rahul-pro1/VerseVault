@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCustomers,userLogin,userLogout,userRegistration,shoppingCart, admin } from '../controllers/user.controllers.js';
+import { getUser,userLogin,userLogout,userRegistration,shoppingCart,admin } from '../controllers/user.controllers.js';
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { checkAdmin, isLogin } from "../middlewares/auth.middlewares.js";
@@ -7,8 +7,8 @@ import { checkAdmin, isLogin } from "../middlewares/auth.middlewares.js";
 const userRouter = Router()
 // const upload = multer()
 
-userRouter.route('/').get( asyncHandler( async (req,res) => {
-    getCustomers(req,res)
+userRouter.route('/').get( isLogin, asyncHandler( async (req,res) => {
+    getUser(req,res)
 } ) )
 
 userRouter.route('/register').post( upload.single("profile"), asyncHandler( async (req,res) => {

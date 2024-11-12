@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-// import './App.css'
 import Home from './components/Home'
 import Register from './components/Register'
 import Login from './components/Login'
 import BookSearch from './components/BookSearch'
 import Cart from './components/Cart'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { MyContext } from "./MyContext";
+import { useState } from 'react'
 
 export default function App() {
+  const [username, setUsername] = useState("")
   return (
     <>
+      <MyContext.Provider value={{ username, setUsername }}>
       <Router>
       <Routes>
         <Route path="/search" element={<BookSearch/>}/>
@@ -21,6 +21,7 @@ export default function App() {
         <Route path='/cart' element={<Cart/>}/>
       </Routes>
       </Router>
+      </MyContext.Provider>
     </>
   )
 }
