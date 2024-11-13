@@ -19,8 +19,9 @@ function BookSearch() {
     // let empty = str_array.join("+").toLowerCase();
 
     try {
-      let response = await axios.get('/api/v1/books', query);
+      let response = await axios.get('/api/v1/books/', query);
       let booksData = response.data
+      console.log("BOOK DATA", response)
       setBooks(booksData);
     } catch (error) {
       console.error("Error fetching data:", error);

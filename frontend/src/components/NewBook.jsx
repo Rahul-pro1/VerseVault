@@ -19,17 +19,9 @@ const NewBook = () => {
 
     e.preventDefault()
 
-    const formData = new FormData();
-
-    formData.append("title",title)
-    formData.append("author",author)
-    formData.append("genre",genre)
-    formData.append("plot",plot)
-    formData.append("book_price", book_price)
-    formData.append("book_cover", book_cover)
-
     try {
-      const response = await axios.post("/api/v1/books/new", formData)
+      // console.log("FORM DATA", formData)
+      const response = await axios.post("/api/v1/books/new", { title, author, genre, plot, book_price, book_cover, copies })
       console.log(response.data);
   
     } catch (error) {
@@ -60,7 +52,7 @@ const NewBook = () => {
           <h2 className="text-4xl font-bold mb-4 text-purple-300">Add a New Book</h2>
           <p className="text-gray-300 mb-6">Post your books here!</p>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit} method='POST'>
             <input 
               type="text" 
               placeholder="Title" 
@@ -87,7 +79,7 @@ const NewBook = () => {
               placeholder="Plot" 
               name='plot'
               className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setGenre(e.target.value) }
+              onChange={ (e) => setPlot(e.target.value) }
             />
             <input 
               type="number" 
