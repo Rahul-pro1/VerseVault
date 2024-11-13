@@ -1,5 +1,6 @@
 import {pool} from "../index.js"
 import createUniqueIdGenerator from "../utils/id.utils.js"
+import { spawn } from 'child_process'
 
 const book_id_gen = createUniqueIdGenerator()
 
@@ -9,6 +10,45 @@ async function bookSearch(req,res) {
     const [records_author] = await pool.query(`select * from books where author = ?`, [query])
     console.log(records+records_author)
     return res.json(records + records_author)
+}
+
+
+async function recommend(req, res) {
+    const ordered = ['Animal Farm', 'Animal Farm / 1984', 'Animal Dreams']; //Since orders table wasn't ready yet
+    // const [ordered] = await pool.query(`select books.title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user)
+
+    const recommendationsPromises = ordered.map((book) => {
+        return new Promise((resolve, reject) => {
+            let output = "";
+
+            const pythonProcess = spawn('python', ['./recommender.py', book]);
+
+            pythonProcess.stdout.on('data', (data) => {
+                output += data.toString();
+            });
+
+            pythonProcess.stderr.on('data', (data) => {
+                console.error(`Error: ${data}`);
+                reject(data.toString());
+            });
+
+            pythonProcess.on('close', (code) => {
+                if (code === 0) {
+                    resolve(output);  
+                } else {
+                    reject(`Process exited with code ${code}`);
+                }
+            });
+        });
+    });
+
+    try {
+        const recommendations = await Promise.all(recommendationsPromises);
+        res.json(recommendations);  
+    } catch (error) {
+        console.error("Error generating recommendations:", error);
+        res.status(500).send("Error generating recommendations");
+    }
 }
 
 async function viewBook(req, res) {
@@ -52,4 +92,14 @@ async function newBook(req, res) {
     return res.status(200).json({ success: true })
 }
 
-export { bookSearch, viewBook, newBook }
+async function updateBook(req, res) {
+    console.log("In updateBook")
+    const { title, author, genre, plot, book_price, copies } = req.body;
+
+    console.log(req.body)
+    const [query] = await pool.query(`update books set title = ?, author =?, genre = ?, plot = ?, book_price = ?, copies = ?`, [title, author, genre, plot, book_price, copies])
+   console.log([query])
+    return res.status(200).json({ success: true })
+}
+
+export { bookSearch, viewBook, newBook, recommend, updateBook }

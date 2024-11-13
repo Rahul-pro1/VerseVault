@@ -15,6 +15,7 @@ const Nav = () => {
                 <Link to="/login" className="book-link">Login</Link>
                 {(user != {}) ? <Link to="/search" className="book-link">Search</Link> : <></>}
                 {(user.role == "customer") ? <Link to="/cart" className="book-link">Cart</Link> : <></>}
+                {(user.role == "customer") ? <Link to="/recommend" className="book-link">Recommended</Link> : <></>}
                 {(user.role == "vendor") ? <Link to="/new" className="book-link">Add Book</Link> : <></>}
             </div>
             </div>
