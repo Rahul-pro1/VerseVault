@@ -5,7 +5,7 @@ import { isLogin, checkVendor } from "../middlewares/auth.middlewares.js";
 
 const booksRouter = Router()
 
-booksRouter.route('/').get(isLogin, asyncHandler( async (req,res) => {
+booksRouter.route('/').post(isLogin, asyncHandler( async (req,res) => {
     console.log("Book search")
     bookSearch(req, res);
 } ) )

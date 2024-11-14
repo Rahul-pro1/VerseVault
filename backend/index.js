@@ -91,3 +91,5 @@ app.listen(port_val, () => {
 });
 
 export { pool };
+
+//Trigger to Validate Bulk Order Quantity Against Total Inventory, Trigger to Block Vendor Deletion if They Have Unfulfilled Orders

@@ -8,7 +8,7 @@ async function bookSearch(req,res) {
     const { query } = req.body
     const [records] = await pool.query(`select * from books where title = ?`, [query])
     const [records_author] = await pool.query(`select * from books where author = ?`, [query])
-    console.log(records+records_author)
+    console.log(records)
     return res.json(records + records_author)
 }
 

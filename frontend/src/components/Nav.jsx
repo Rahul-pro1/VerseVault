@@ -13,7 +13,7 @@ const Nav = () => {
                 <Link to="/" className="book-link">Home</Link>
                 <Link to="/register" className="book-link">Register</Link>
                 <Link to="/login" className="book-link">Login</Link>
-                {(user != {}) ? <Link to="/search" className="book-link">Search</Link> : <></>}
+                {(user.role == "customer" || user.role == "vendor" || user.role == "admin") ? <Link to="/search" className="book-link">Search</Link> : <></>}
                 {(user.role == "customer") ? <Link to="/cart" className="book-link">Cart</Link> : <></>}
                 {(user.role == "customer") ? <Link to="/recommend" className="book-link">Recommended</Link> : <></>}
                 {(user.role == "vendor") ? <Link to="/new" className="book-link">Add Book</Link> : <></>}
