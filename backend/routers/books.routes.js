@@ -1,9 +1,5 @@
 import { Router } from "express";
-<<<<<<< HEAD
-import { bookSearch, viewBook, newBook, buy } from '../controllers/books.controllers.js';
-=======
-import { bookSearch, viewBook, newBook, recommend, updateBook } from '../controllers/books.controllers.js';
->>>>>>> 530dde923b87f58456fdd6edaa1131419fafbcdd
+import { bookSearch, viewBook, newBook, recommend, updateBook, buy } from '../controllers/books.controllers.js';
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
 import { isLogin, checkVendor } from "../middlewares/auth.middlewares.js";
 

@@ -156,7 +156,6 @@ async function buy(req, res) {
     }
 }
 
-export { bookSearch, viewBook, newBook, buy }
 async function updateBook(req, res) {
     console.log("In updateBook")
     const { title, author, genre, plot, book_price, copies } = req.body;
@@ -167,4 +166,4 @@ async function updateBook(req, res) {
     return res.status(200).json({ success: true })
 }
 
-export { bookSearch, viewBook, newBook, recommend, updateBook }
+export { bookSearch, viewBook, newBook, recommend, updateBook, buy }
