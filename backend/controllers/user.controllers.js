@@ -3,6 +3,16 @@ import bcryptjs from "bcryptjs"
 import validator from "validator";
 import { uploadOnCloudinary } from "../utils/cloudinary.utils.js";
 
+function checkBookId(books,id){
+    let found=false;
+    for(let book of books){
+        if(book.id === id){
+            found=true
+        }
+    }
+    return found
+}
+
 async function getUser(req,res) { 
     const username = req.session.user
     const role = req.session.role
@@ -163,20 +173,61 @@ async function userLogout(req, res) {
 }
 
 async function shoppingCart(req,res){
-    const {book_id} = req.body
+    let {book_id, copies} = req.body
+
+    console.log(copies)
 
     if(!book_id){
         console.log(`book is not received!`);
         return res.status(400).send(`book is not received!`)
     }
 
+    if(!copies){
+        copies = 1;
+    }
+
     console.log(`Book is ${book_id}`);
+
+    let [isBookIdValid] = await pool.query(`select * from books where book_id=?`,[book_id])
+
+    if(isBookIdValid.length === 0){
+        console.log(`Invalid book id ${book_id}`);
+        return res.status(400).send(`book id not valid!`)
+    }
+
+    // Fetch the number of copies from the database
+    let [copiesResult] = await pool.query(`SELECT copies FROM books WHERE book_id=?`, [book_id]);
+    console.log("copiesResult:", copiesResult);
+
+    // Correctly handle the result to get isCopies
+    let [{ copies: isCopies } = {}] = copiesResult;
+
+    console.log(`Copies are ${isCopies}`);
+
+    if(copies > isCopies){
+        console.log(`Sorry, book copies not available`);
+        return res.status(400).send(`Sorry, book copies not available`)
+    }
 
     if(!req.session.book){
         req.session.book = []
     }
 
-    req.session.book.push(book_id)
+    let check_id = checkBookId(req.session.book, book_id)
+
+    if(check_id){
+
+        console.log(`In checkBookId true`);
+
+        for(let book of req.session.book){
+            if(book.id === book_id){
+                book.copies += copies
+            }
+        }
+    }
+    else{
+        req.session.book.push({"id":book_id, "copies":copies})
+    }
 
     return res
     .status(200)
