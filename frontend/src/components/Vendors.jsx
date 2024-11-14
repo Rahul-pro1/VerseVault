@@ -3,17 +3,26 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import Nav from './Nav';
 
-const Cart = () => {
-  const [books, setBooks] = useState([])
+const Vendors = () => {
+  const [vendors, setVendors] = useState([])
 
   useEffect(() => {
-    async function getCart() {
-      const res = axios.get('/api/v1/users/shopping')
-      console.log("books", res.data)
-      setBooks(res.data)
+    async function getVendors() {
+      const res = await axios.get('/api/v1/admin/vendors')
+      console.log(res.data)
+      setVendors(res.data)
     }
-    getCart()
+    getVendors()
   }, [])
+
+  async function handleDelete(username) {
+    try {
+        const res = await axios.delete(`/api/v1/admin/delete/${ username }`) 
+        console.log(res.data)
+    } catch (err) {
+        console.log(err)
+    }
+  }
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
@@ -22,12 +31,12 @@ const Cart = () => {
         className="flex-grow flex items-center justify-center text-center py-20 bg-cover bg-center relative"
         style={{ backgroundImage: `url('/library.jpg')` }} // Replace with correct path to your uploaded image
       >
-      {books.map((book) => (
-        <li key={book.book_id} className="flex py-6">
+      {vendors.map((vendor) => (
+        <li key={vendor.vendor_id} className="flex py-6">
           <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
             <img
               alt=""
-              src={book.book_cover}
+              src={vendor.profile}
               className="size-full object-cover object-center"
             />
           </div>
@@ -36,18 +45,18 @@ const Cart = () => {
             <div>
               <div className="flex justify-between text-base font-medium text-gray-900">
                 <h3>
-                  <a>{book.name}</a>
+                  <a>{vendor.vendor_username}</a>
                 </h3>
-                <p className="ml-4">{book.genre}</p>
+                <p className="ml-4">{vendor.email}</p>
               </div>
-              <p className="mt-1 text-sm text-gray-500">{book.plot}</p>
+              <p className="mt-1 text-sm text-gray-500">{vendor.vendor_contact}</p>
             </div>
             <div className="flex flex-1 items-end justify-between text-sm">
-              <p className="text-gray-500">{book.vendor_username}</p>
+              <p className="text-gray-500">{vendor.vendor_username}</p>
 
               <div className="flex">
-                <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Remove
+                <button type="button" onClick={() => handleDelete(vendor.vendor_username)} className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Delete
                 </button>
               </div>
             </div>
@@ -63,4 +72,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Vendors;

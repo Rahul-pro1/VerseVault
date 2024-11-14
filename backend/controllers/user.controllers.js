@@ -173,6 +173,7 @@ async function userLogout(req, res) {
 }
 
 async function shoppingCart(req,res){
+    console.log("In shoppingCart")
     let {book_id, copies} = req.body
 
     console.log(copies)
@@ -234,12 +235,18 @@ async function shoppingCart(req,res){
     .json({"success":true})
 }
 
+async function getCart(req, res) {
+    console.log("In getCart")
+    console.log(req.session.book)
+    return res.json(req.session.book)
+}
+
 async function admin(req,res){
-    const {username, password} = req.body
+    const {username, name, password} = req.body
 
     const hashed = await bcryptjs.hash(password, 12)
 
-    const query = await pool.query(`insert into admin values(?,?)`,[username, hashed])
+    const query = await pool.query(`insert into admin values(?,?,?)`,[username, name, hashed])
 
     console.log([query])
 
@@ -247,4 +254,4 @@ async function admin(req,res){
     .send("admin added")
 }
 
-export {getUser, userRegistration, userLogin, userLogout, shoppingCart, admin}
+export {getUser, userRegistration, userLogin, userLogout, shoppingCart, getCart, admin}

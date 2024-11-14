@@ -1,30 +1,30 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
 import { Link } from "react-router-dom";
 
-function BookSearch() {
-  const [query, setQuery] = useState("");
+function ViewBooks() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    setLoading(true);  // Start loading
-    setBooks([]);      // Clear previous results
+  useEffect(() => {
+      async function viewBooks() {
+      setLoading(true);  // Start loading
+      setBooks([]);      // Clear previous results
 
-    try {
-      console.log("QUERY", query);
-      const response = await axios.post('/api/v1/books/', { query });
-      const booksData = response.data;
-      console.log("BOOK DATA", booksData);
-      setBooks(booksData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);  // Stop loading
+      try {
+        const response = await axios.get('/api/v1/books/vendor');
+        const booksData = response.data;
+        console.log("BOOK DATA", booksData);
+        setBooks(booksData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);  // Stop loading
+      }
     }
-  };
+    viewBooks()
+  }, []);
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
@@ -33,29 +33,8 @@ function BookSearch() {
         className="flex-grow flex items-center justify-center text-center py-20 bg-cover bg-center relative"
         style={{ backgroundImage: `url('/library.jpg')` }} // Replace with the correct path to your image
       >
-        <div className="flex flex-col items-center justify-center min-h-screen bg-center bg-[url('/search.jpg')]">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-purple-900 opacity-80"></div>
           <div className="relative z-10 text-center text-white p-8">
-            <h2 className="text-3xl font-bold mb-4">Find Your Next Book</h2>
-            <p className="text-gray-300 mb-8">
-              Discover a world of books by searching for your favorite title or author.
-            </p>
-
-            <form onSubmit={handleSearch} className="flex space-x-2 pl-28">
-              <input
-                type="text"
-                placeholder="Search for books..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="px-4 py-2 rounded-lg focus:outline-none w-64 text-black placeholder-gray-500"
-              />
-              <button
-                type="submit"
-                className="text-black font-semibold px-4 py-2 rounded-lg hover:bg-gray-200 transition duration-200"
-              >
-                Search
-              </button>
-            </form>
 
             {loading && (
               <div className="mt-8">
@@ -86,10 +65,9 @@ function BookSearch() {
               </div>
             )}
           </div>
-        </div>
       </section>
     </div>
   );
 }
 
-export default BookSearch;
+export default ViewBooks;

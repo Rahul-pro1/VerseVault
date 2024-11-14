@@ -10,7 +10,8 @@ import Recommend from './components/Recommend'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { MyContext } from './MyContext'
 import { useState } from 'react'
-
+import Vendors from './components/Vendors'
+import ViewBooks from './components/ViewBooks'
 
 export default function App() {
   const [user, setUser] = useState({})
@@ -24,10 +25,12 @@ export default function App() {
         <Route path='/register' element={<Register/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/cart' element={<Cart/>}/>
+        <Route path='/viewBook' element={<ViewBooks/>}/>
         <Route path='/view/:id' element={<View/>}/>
         <Route path='/new' element={<NewBook/>}/>
         <Route path='/update/:id' element={<UpdateBook/>}/>
         <Route path='/recommend' element={<Recommend/>}/>
+        <Route path='/vendors' element={<Vendors/>}/>
       </Routes>
       </Router>
     </MyContext.Provider>

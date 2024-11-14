@@ -15,16 +15,21 @@ const isLogin = asyncHandler( async (req,res,next) => {
     }
 } )
 
-const checkAdmin = asyncHandler(async( req,res,next ) => {
-    const {username} = req.body
+const checkAdmin = asyncHandler(async (req, res, next) => {
+    const username = req.session.user;
+    console.log(username);
+    console.log("checkAdmin");
 
-    const [admin] = await pool.query(`select * from admin where admin_username=?`,[username])
+    const [admin] = await pool.query(`SELECT * FROM admin WHERE admin_username = ?`, [username]);
 
-    console.log(`admin ${admin[0].admin_username}`);
+    if (admin.length === 0) {
+        return res.status(403).send('Not an admin');
+    }
 
-    return res
-    .send(`user ${admin[0].admin_username}`)
-} )
+    req.session.role = "admin";
+    next();
+});
+
 
 const checkVendor = asyncHandler(async( req,res,next ) => {
     console.log(`In checkVendor middleware`);
