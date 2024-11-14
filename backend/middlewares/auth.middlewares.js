@@ -27,6 +27,7 @@ const checkAdmin = asyncHandler(async( req,res,next ) => {
 } )
 
 const checkVendor = asyncHandler(async( req,res,next ) => {
+<<<<<<< HEAD
 
     console.log(`In checkVendor`);
 
@@ -39,6 +40,17 @@ const checkVendor = asyncHandler(async( req,res,next ) => {
         return res.status(401).json({"message":`User not a vendor!`})
     }
 
+=======
+    console.log(`In checkVendor middleware`);
+
+    if(req.session.role === "vendor"){
+        return next()
+    }
+    else{
+        console.log(`Not a vendor`);
+        return res.status(401).json({"message":`Not a vendor`})
+    }
+>>>>>>> 530dde923b87f58456fdd6edaa1131419fafbcdd
 } )
 
 export {isLogin, checkAdmin, checkVendor}

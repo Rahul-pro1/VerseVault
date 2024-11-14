@@ -10,7 +10,7 @@ const Login = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const [user, setUser] = useContext(MyContext)
+  const { user, setUser } = useContext(MyContext)
 
   async function handleLogin(e){
 
