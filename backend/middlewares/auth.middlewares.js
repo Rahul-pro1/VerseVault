@@ -27,14 +27,18 @@ const checkAdmin = asyncHandler(async( req,res,next ) => {
 } )
 
 const checkVendor = asyncHandler(async( req,res,next ) => {
-    const {username} = req.body
 
-    const [vendor] = await pool.query(`select * from vendor where vendor_username=?`,[username])
+    console.log(`In checkVendor`);
 
-    console.log(`vendor ${vendor[0].vendor_username}`);
+    if(req.session.role === "vendor"){
+        console.log(`Is a vendor`);
+        return next()
+    }
+    else{
+        console.log(`Is not a vendor`);
+        return res.status(401).json({"message":`User not a vendor!`})
+    }
 
-    return res
-    .send(`user ${vendor[0].vendor_username}`)
 } )
 
 export {isLogin, checkAdmin, checkVendor}
