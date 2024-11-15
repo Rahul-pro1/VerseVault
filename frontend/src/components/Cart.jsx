@@ -29,6 +29,8 @@ const Cart = () => {
         style={{ backgroundImage: `url('/library.jpg')` }} // Ensure the path is correct
       >
         {books.length > 0 ? (
+          <div className="mt-8 max-w-2xl w-full bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="bg-white grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 p-8">
           <ul>
             {books.map((book) => (
               <li key={book.book_id} className="flex py-6">
@@ -48,7 +50,7 @@ const Cart = () => {
                       </h3>
                       <p className="ml-4">{book.genre}</p>
                     </div>
-                    <p className="mt-1 text-sm text-gray-500">{book.plot}</p>
+                    {/* <p className="mt-1 text-sm text-gray-500">{book.plot}</p> */}
                   </div>
                   <div className="flex flex-1 items-end justify-between text-sm">
                     <p className="text-gray-500">{book.vendor_username}</p>
@@ -57,7 +59,7 @@ const Cart = () => {
                         type="button"
                         className="font-medium text-indigo-600 hover:text-indigo-500"
                       >
-                        Remove
+                        Buy
                       </button>
                     </div>
                   </div>
@@ -65,6 +67,8 @@ const Cart = () => {
               </li>
             ))}
           </ul>
+          </div>
+          </div>
         ) : (
           <p>No books found in your cart.</p>
         )}

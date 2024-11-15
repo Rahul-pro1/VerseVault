@@ -27,6 +27,10 @@ booksRouter.route('/:id').get( asyncHandler( async (req,res) => {
     viewBook(req, res);
 } ) )
 
+booksRouter.route('/:id/review').post( asyncHandler( async (req, res) => {
+    addReviews(req, res)
+} ) )
+
 booksRouter.route('/new').post(isLogin, checkVendor, upload.single("book_cover"), asyncHandler( async (req,res) => {
     newBook(req, res);
 } ) )
@@ -37,5 +41,6 @@ booksRouter.route('/buy').post(isLogin, asyncHandler( async (req,res) => {
 booksRouter.route('/:id').put(checkVendor, asyncHandler( async (req,res) => {
     updateBook(req, res);
 } ) )
+
 
 export { booksRouter }

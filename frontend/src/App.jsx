@@ -31,6 +31,7 @@ export default function App() {
         <Route path='/update/:id' element={<UpdateBook/>}/>
         <Route path='/recommend' element={<Recommend/>}/>
         <Route path='/vendors' element={<Vendors/>}/>
+        {/* <Route path='/review/:id' element={<Review/>}/> */}
       </Routes>
       </Router>
     </MyContext.Provider>

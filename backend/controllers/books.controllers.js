@@ -19,8 +19,12 @@ async function bookSearch(req, res) {
 
 
 async function recommend(req, res) {
-    const ordered = ['Animal Farm', 'Animal Farm / 1984', 'Animal Dreams']; // Placeholder data since orders table wasn't ready yet
-    // const [ordered] = await pool.query(`select books.title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user);
+    // const ordered = ['Animal Farm', 'Animal Farm / 1984', 'Animal Dreams']; // Placeholder data since orders table wasn't ready yet
+    let [ordered] = await pool.query(`select books.title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user);
+    ordered = ordered.map(obj => {
+        return obj.title
+    })
+    console.log("ORDERED", ordered)
 
     const recommendationsPromises = ordered.map((book) => {
         return new Promise((resolve, reject) => {
