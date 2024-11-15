@@ -1,31 +1,26 @@
 USE versevault;
 
-CREATE TABLE customer(
-    customer_username VARCHAR(30) PRIMARY KEY,
-    customer_password VARCHAR(80) NOT NULL,
-    customer_contact VARCHAR(10) NOT NULL,
-    customer_email VARCHAR(20) NOT NULL,
-    customer_name VARCHAR(30),
-    profile VARCHAR(80)
+CREATE TABLE customer (
+    customer_username varchar(30) PRIMARY KEY,
+    customer_email varchar(50) NOT NULL,
+    customer_contact varchar(15) NOT NULL,
+    customer_password varchar(80) NOT NULL,
+    profile varchar(100) 
 );
 
-CREATE TABLE vendor(
-    vendor_username VARCHAR(30) PRIMARY KEY,
-    vendor_password VARCHAR(80) NOT NULL,
-    vendor_contact VARCHAR(10) NOT NULL,
-    vendor_email VARCHAR(20) NOT NULL,
-    vendor_name VARCHAR(30),
-    profile VARCHAR(80)
+CREATE TABLE vendor (
+    vendor_username varchar(30) PRIMARY KEY,
+    vendor_email varchar(50) NOT NULL,
+    vendor_contact varchar(15) NOT NULL,
+    vendor_password varchar(80) NOT NULL,
+    profile varchar(100) 
 );
 
-CREATE TABLE admin(
-    admin_username VARCHAR(30) PRIMARY KEY,
-    admin_password VARCHAR(80) NOT NULL
+CREATE TABLE admin (
+    admin_username varchar(30) PRIMARY KEY,
+    admin_name varchar(30) NOT NULL,
+    admin_password varchar(80) NOT NULL, 
 );
-
--- CREATE TABLE 
-
-alter table vendor add column vendor_id varchar(20) PRIMARY KEY;
 
 CREATE TABLE books (
     book_id VARCHAR(10) PRIMARY KEY,
@@ -51,6 +46,7 @@ CREATE TABLE reviews (
 );
 
 CREATE TABLE orders (
+<<<<<<< HEAD
     order_id VARCHAR(10) PRIMARY KEY,
     book_id VARCHAR(10),
     delivery_address VARCHAR(2000) NOT NULL,
@@ -60,6 +56,19 @@ CREATE TABLE orders (
     FOREIGN KEY (book_id) REFERENCES books(book_id),
     FOREIGN KEY (customer_username) REFERENCES customer(customer_username)
 );
+=======
+    order_id VARCHAR(100) PRIMARY KEY,
+    book_id VARCHAR(100),
+    delivery_address VARCHAR(2000) NOT NULL,
+    payment_status VARCHAR(10) NOT NULL,
+    customer_username VARCHAR(20),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (customer_username) REFERENCES customer(customer_username)
+);
+
+ALTER TABLE orders ADD COLUMN mode_of_payment ENUM("Online", "Cash on delivery");
+ALTER TABLE orders MODIFY COLUMN payment_status ENUM("Paid", "Pending");
+>>>>>>> bb99fd4d8c47dc5d82b42462b5653d37ee2b3220
 
 DELIMITER //
 CREATE TRIGGER vendor_delete 
@@ -107,16 +116,4 @@ END;
 DELIMITER ;
 
 
-CREATE TABLE orders (
-    order_id VARCHAR(100) PRIMARY KEY,
-    book_id VARCHAR(100),
-    delivery_address VARCHAR(2000) NOT NULL,
-    payment_status VARCHAR(10) NOT NULL,
-    customer_username VARCHAR(20),
-    FOREIGN KEY (book_id) REFERENCES books(book_id),
-    FOREIGN KEY (customer_username) REFERENCES customer(customer_username)
-);
 
-
-ALTER TABLE orders ADD COLUMN mode_of_payment ENUM("Online", "Cash on delivery");
-ALTER TABLE orders MODIFY COLUMN payment_status ENUM("Paid", "Pending");
