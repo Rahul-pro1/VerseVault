@@ -16,35 +16,11 @@ const Home = () => {
         <div className="relative z-10">
           <h2 className="text-6xl md:text-7xl font-bold mb-4">Discover Your Next Great Read</h2>
           <p className="text-xl text-gray-300 mb-8">Explore a world of stories and knowledge at your fingertips.</p>
-          <a href="#contact" className="bg-black text-white px-6 py-3 rounded-lg shadow-lg hover:bg-gray-800 transition duration-300 book-link">
-            Contact Us
-          </a>
+          <Link to="/recommend" className="bg-black text-white px-6 py-3 rounded-lg shadow-lg hover:bg-gray-800 transition duration-300 book-link">
+            Recommended Books!
+          </Link>
         </div>
       </header>
-
-      {/* Contact Section */}
-      <section id="contact" className="bg-gray-800 py-20">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-semibold text-purple-300 mb-4">Contact Us</h2>
-          <p className="text-gray-300 mb-6">We’d love to hear from you! Reach out to us for any questions or support.</p>
-          <form className="space-y-4 max-w-md mx-auto">
-            <input type="text" placeholder="Your Name" className="w-full p-3 rounded bg-gray-700 text-white" />
-            <input type="email" placeholder="Your Email" className="w-full p-3 rounded bg-gray-700 text-white" />
-            <textarea placeholder="Your Message" className="w-full p-3 rounded bg-gray-700 text-white h-32"></textarea>
-            <button type="submit" className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-6 rounded">
-              Send Message
-            </button>
-          </form>
-        </div>
-      </section>
-
-      {/* Help Section */}
-      <section id="help" className="container mx-auto py-12 px-6">
-        <h2 className="text-3xl font-semibold text-center text-purple-300 mb-4">Help</h2>
-        <p className="text-gray-300 text-center max-w-2xl mx-auto">
-          Find answers to common questions, get guidance on book selections, and learn more about using our bookstore.
-        </p>
-      </section>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-6 text-center">
