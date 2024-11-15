@@ -1,6 +1,7 @@
 import { pool } from "../index.js"
 
 async function vendor_delete(req, res) {
+  console.log("In vendors delete")
   const { username } = req.params
   const [query] = await pool.query(`delete from vendor where vendor_username=?`, [username])
   console.log(query)

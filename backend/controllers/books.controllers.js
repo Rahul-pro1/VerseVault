@@ -74,7 +74,6 @@ async function recommend(req, res) {
     }
 }
 
-
 async function viewBook(req, res) {
     console.log("In viewBook")
     const { id } = req.params
@@ -191,14 +190,29 @@ async function buy(req, res) {
 }
 
 async function updateBook(req, res) {
-    console.log("In updateBook")
+    console.log("In updateBook");
     const { title, author, genre, plot, book_price, copies } = req.body;
+    const { id } = req.params
 
-    console.log(req.body)
-    const [query] = await pool.query(`update books set title = ?, author =?, genre = ?, plot = ?, book_price = ?, copies = ?`, [title, author, genre, plot, book_price, copies])
-   console.log([query])
-    return res.status(200).json({ success: true })
+    console.log(id);
+
+    try {
+        const [query] = await pool.query(
+            `UPDATE books SET title = ?, author = ?, genre = ?, plot = ?, book_price = ?, copies = ? WHERE book_id = ?`,
+            [title, author, genre, plot, book_price, copies, id]
+        );
+
+        if (query.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Book not found" });
+        }
+
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Error updating book:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
 }
+
 
 async function getVendorBooks(req, res) {
     console.log("In getVendorBooks")

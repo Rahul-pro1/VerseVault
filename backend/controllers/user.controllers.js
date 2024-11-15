@@ -238,7 +238,14 @@ async function shoppingCart(req,res){
 async function getCart(req, res) {
     console.log("In getCart")
     console.log(req.session.book)
-    return res.json(req.session.book)
+    const books = await Promise.all(
+        req.session.book.map(async (item) => {
+            const [book] = await pool.query('SELECT * FROM books WHERE book_id = ?', [item.id]);
+            return book[0]
+        })
+    );
+    console.log(books)
+    return res.json(books)
 }
 
 async function admin(req,res){

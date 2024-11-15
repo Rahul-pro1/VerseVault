@@ -5,13 +5,13 @@ import { checkAdmin } from "../middlewares/auth.middlewares.js";
 
 const adminRouter = Router()
 
-adminRouter.route('/delete/:username').delete(checkAdmin, asyncHandler( (req, res) => {
-    vendor_delete(req, res)
-} ) )
-
-adminRouter.route('/vendors').get(checkAdmin, asyncHandler( (req, res) => {
+adminRouter.route('/vendors').get(checkAdmin, async (req, res) => {
     console.log("In /vendors")
     getVendors(req, res)
-} ))
+} )
+
+adminRouter.route('/delete/:username').delete(checkAdmin, async (req, res) => {
+    vendor_delete(req, res)
+} )
 
 export { adminRouter }
