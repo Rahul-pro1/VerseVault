@@ -8,7 +8,7 @@ const Cart = () => {
 
   useEffect(() => {
     async function getCart() {
-      const res = axios.get('/api/v1/users/shopping')
+      const res = await axios.get('/api/v1/users/shopping')
       console.log("books", res.data)
       setBooks(res.data)
     }
@@ -22,6 +22,8 @@ const Cart = () => {
         className="flex-grow flex items-center justify-center text-center py-20 bg-cover bg-center relative"
         style={{ backgroundImage: `url('/library.jpg')` }} // Replace with correct path to your uploaded image
       >
+       <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-purple-900 opacity-80"></div>
+       <div className="relative z-10 text-center text-white p-8"> 
       {books.map((book) => (
         <li key={book.book_id} className="flex py-6">
           <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
@@ -47,13 +49,14 @@ const Cart = () => {
 
               <div className="flex">
                 <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Remove
+                  Buy
                 </button>
               </div>
             </div>
           </div>
         </li>
       ))}
+      </div>
       </section>
 
       <footer className="bg-gray-900 text-gray-400 py-6 text-center">
