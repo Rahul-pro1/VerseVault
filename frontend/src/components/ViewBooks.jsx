@@ -48,7 +48,7 @@ function ViewBooks() {
               <div className="mt-8 max-w-2xl w-full bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="bg-white grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 p-8">
                   {books.map((book) => (
-                    <Link to={`/view/${ book.book_id }`} className="group">
+                    <Link to={`/view/${ book.book_id }`} className="group" key={book.book_id}>
                     <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                       <img
                         src={book.book_cover || "/default-cover.jpg"}  // Default image if cover is missing
