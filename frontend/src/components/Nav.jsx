@@ -1,13 +1,14 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { MyContext } from "../MyContext";
+import axios from "axios";
 
 const Nav = () => {
     const { user, setUser } = useContext(MyContext)
 
     async function logout(evt) {
         evt.preventDefault()
-        const [query] = await axios.get('/api/v1/users/logout')
+        const query = await axios.post('/api/v1/users/logout')
         console.log(query)
         setUser({})
     }

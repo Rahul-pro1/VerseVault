@@ -24,8 +24,8 @@ CREATE TABLE admin (
 
 CREATE TABLE books (
     book_id VARCHAR(10) PRIMARY KEY,
-    title VARCHAR(100) NOT NULL UNIQUE,
-    author VARCHAR(50) NOT NULL,
+    title VARCHAR(50) NOT NULL UNIQUE,
+    author VARCHAR(20) NOT NULL,
     genre VARCHAR(30) NOT NULL,
     plot VARCHAR(2000) NOT NULL,
     book_price DECIMAL(10, 2) NOT NULL,
@@ -36,9 +36,9 @@ CREATE TABLE books (
 );
 
 CREATE TABLE reviews (
-    review_id VARCHAR(100) PRIMARY KEY,
+    review_id VARCHAR(10) PRIMARY KEY,
     customer_username VARCHAR(20),
-    book_id VARCHAR(100),
+    book_id VARCHAR(10),
     content VARCHAR(2000),
     rating ENUM('1', '2', '3', '4', '5'),
     FOREIGN KEY (customer_username) REFERENCES customer(customer_username),
