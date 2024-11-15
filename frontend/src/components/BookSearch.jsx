@@ -15,14 +15,17 @@ function BookSearch() {
     // let empty = str_array.join("+").toLowerCase();
 
     try {
-      console.log("QUERY", query)
+      console.log("QUERY", query);
       let response = await axios.post('/api/v1/books/', { query });
-      let booksData = response.data
-      console.log("BOOK DATA", response)
+      console.log("RESPONSE DATA", response.data);  // Check the structure here
+      let booksData = response.data;
+    
+      booksData = Array.isArray(response.data) ? response.data : [response.data];
       setBooks(booksData);
     } catch (error) {
       console.error("Error fetching data:", error);
-    } finally {
+    }
+    finally {
       setLoading(false);  // Stop loading
     }
   };

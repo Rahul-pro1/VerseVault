@@ -1,40 +1,65 @@
--- USE versevault;
+USE versevault;
+
+CREATE TABLE customer(
+    customer_username VARCHAR(30) PRIMARY KEY,
+    customer_password VARCHAR(80) NOT NULL,
+    customer_contact VARCHAR(10) NOT NULL,
+    customer_email VARCHAR(20) NOT NULL,
+    customer_name VARCHAR(30),
+    profile VARCHAR(80)
+);
+
+CREATE TABLE vendor(
+    vendor_username VARCHAR(30) PRIMARY KEY,
+    vendor_password VARCHAR(80) NOT NULL,
+    vendor_contact VARCHAR(10) NOT NULL,
+    vendor_email VARCHAR(20) NOT NULL,
+    vendor_name VARCHAR(30),
+    profile VARCHAR(80)
+);
+
+CREATE TABLE admin(
+    admin_username VARCHAR(30) PRIMARY KEY,
+    admin_password VARCHAR(80) NOT NULL
+);
+
+-- CREATE TABLE 
 
 -- alter table vendor add column vendor_id varchar(20) PRIMARY KEY;
 
--- CREATE TABLE books (
---     book_id VARCHAR(10) PRIMARY KEY,
---     title VARCHAR(50) NOT NULL UNIQUE,
---     author VARCHAR(20) NOT NULL,
---     genre VARCHAR(30) NOT NULL,
---     plot VARCHAR(2000) NOT NULL,
---     book_price DECIMAL(10, 2) NOT NULL,
---     vendor_username VARCHAR(20),
---     book_cover varchar(100),
---     FOREIGN KEY (vendor_username) REFERENCES vendor(vendor_username),
---     copies INT
--- );
+CREATE TABLE books (
+    book_id VARCHAR(10) PRIMARY KEY,
+    title VARCHAR(50) NOT NULL UNIQUE,
+    author VARCHAR(20) NOT NULL,
+    genre VARCHAR(30) NOT NULL,
+    plot VARCHAR(2000) NOT NULL,
+    book_price DECIMAL(10, 2) NOT NULL,
+    vendor_username VARCHAR(20),
+    book_cover varchar(100),
+    FOREIGN KEY (vendor_username) REFERENCES vendor(vendor_username),
+    copies INT
+);
 
--- CREATE TABLE reviews (
---     review_id VARCHAR(10) PRIMARY KEY,
---     customer_username VARCHAR(20),
---     book_id VARCHAR(10),
---     content VARCHAR(2000),
---     rating ENUM('1', '2', '3', '4', '5'),
---     FOREIGN KEY (customer_username) REFERENCES customer(customer_username),
---     FOREIGN KEY (book_id) REFERENCES books(book_id)
--- );
+CREATE TABLE reviews (
+    review_id VARCHAR(10) PRIMARY KEY,
+    customer_username VARCHAR(20),
+    book_id VARCHAR(10),
+    content VARCHAR(2000),
+    rating ENUM('1', '2', '3', '4', '5'),
+    FOREIGN KEY (customer_username) REFERENCES customer(customer_username),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
+);
 
--- CREATE TABLE orders (
---     order_id VARCHAR(10) PRIMARY KEY,
---     book_id VARCHAR(10),
---     delivery_address VARCHAR(2000) NOT NULL,
---     payment_status VARCHAR(10) NOT NULL,
---     customer_username VARCHAR(20),
---     copies INT DEFAULT 1,
---     FOREIGN KEY (book_id) REFERENCES books(book_id),
---     FOREIGN KEY (customer_username) REFERENCES customer(customer_username)
--- );
+CREATE TABLE orders (
+    order_id VARCHAR(10) PRIMARY KEY,
+    book_id VARCHAR(10),
+    delivery_address VARCHAR(2000) NOT NULL,
+    payment_status VARCHAR(10) NOT NULL,
+    customer_username VARCHAR(20),
+    copies INT DEFAULT 1,
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (customer_username) REFERENCES customer(customer_username)
+);
 
 DELIMITER //
 CREATE TRIGGER vendor_delete 

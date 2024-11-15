@@ -7,10 +7,12 @@ const book_id_gen = createUniqueIdGenerator()
 
 async function bookSearch(req,res) {
     const { query } = req.body
+    console.log("Query ", query);
     const [records] = await pool.query(`select * from books where title = ?`, [query])
     const [records_author] = await pool.query(`select * from books where author = ?`, [query])
     console.log(records)
-    return res.json(records + records_author)
+    let res_array=[...records, ...records_author]
+    return res.status(200).json(res_array)
 }
 
 
@@ -60,7 +62,13 @@ async function viewBook(req, res) {
 
 async function newBook(req, res) {
     console.log("In newBook")
-    const vendor_username = req.session.user;
+
+    let vendor_username
+
+    if(req.session.user && req.session.role === "vendor"){
+        vendor_username = req.session.user;
+    }
+
     const { title, author, genre, plot, book_price, copies } = req.body;
     const [books] = await pool.query(`select title from books where title=?`, [title]);
 
@@ -83,9 +91,10 @@ async function newBook(req, res) {
     console.log(req.body)
     let query;
     if (books.length === 0) {
-        const book_id = book_id_gen()
+        const book_id = uuidv4()
         console.log(book_id)
-        [query] = await pool.query(`insert into books (book_id, title, author, genre, plot, book_cover, book_price, copies, vendor_username) values (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [book_id, title, author, genre, plot, book_cover?.url, book_price, copies, vendor_username])
+        const book_cover_url = req.body.book_cover ? req.body.book_cover.url : null;
+        [query] = await pool.query(`insert into books (book_id, title, author, genre, plot, book_cover, book_price, copies, vendor_username) values (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [book_id, title, author, genre, plot, book_cover_url, book_price, copies, vendor_username])
     } else {
         [query] = await pool.query(`update books set copies=copies+? where title=?`, [copies, title])
     }
