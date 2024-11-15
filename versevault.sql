@@ -25,7 +25,7 @@ CREATE TABLE admin(
 
 -- CREATE TABLE 
 
--- alter table vendor add column vendor_id varchar(20) PRIMARY KEY;
+alter table vendor add column vendor_id varchar(20) PRIMARY KEY;
 
 CREATE TABLE books (
     book_id VARCHAR(10) PRIMARY KEY,
@@ -107,16 +107,16 @@ END;
 DELIMITER ;
 
 
--- CREATE TABLE orders (
---     order_id VARCHAR(10) PRIMARY KEY,
---     book_id VARCHAR(10),
---     delivery_address VARCHAR(2000) NOT NULL,
---     payment_status VARCHAR(10) NOT NULL,
---     customer_username VARCHAR(20),
---     FOREIGN KEY (book_id) REFERENCES books(book_id),
---     FOREIGN KEY (customer_username) REFERENCES customer(customer_username)
--- );
+CREATE TABLE orders (
+    order_id VARCHAR(100) PRIMARY KEY,
+    book_id VARCHAR(100),
+    delivery_address VARCHAR(2000) NOT NULL,
+    payment_status VARCHAR(10) NOT NULL,
+    customer_username VARCHAR(20),
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (customer_username) REFERENCES customer(customer_username)
+);
 
 
--- ALTER TABLE orders ADD COLUMN mode_of_payment ENUM("Online", "Cash on delivery");
--- ALTER TABLE orders MODIFY COLUMN payment_status ENUM("Paid", "Pending");
+ALTER TABLE orders ADD COLUMN mode_of_payment ENUM("Online", "Cash on delivery");
+ALTER TABLE orders MODIFY COLUMN payment_status ENUM("Paid", "Pending");

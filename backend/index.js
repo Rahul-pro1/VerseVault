@@ -80,9 +80,11 @@ app.use(passport.session())
 
 import { userRouter } from './routers/user.routes.js';
 import { booksRouter } from './routers/books.routes.js';
+import { adminRouter } from './routers/admin.routes.js';
 
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/books', booksRouter)
+app.use('/api/v1/admin', adminRouter)
 
 const port_val = process.env.PORT || 8080;
 

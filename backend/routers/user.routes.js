@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUser,userLogin,userLogout,userRegistration,shoppingCart,admin } from '../controllers/user.controllers.js';
+import { getUser,userLogin,userLogout,userRegistration,shoppingCart,admin, getCart } from '../controllers/user.controllers.js';
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { checkAdmin, isLogin } from "../middlewares/auth.middlewares.js";
@@ -21,6 +21,10 @@ userRouter.route('/login').post( asyncHandler( async (req,res) => {
 
 userRouter.route('/logout').post( asyncHandler( async (req,res) => {
     userLogout(req,res)
+} ) )
+
+userRouter.route('/shopping').get( isLogin, asyncHandler( async (req,res) => {
+    getCart(req,res)
 } ) )
 
 userRouter.route('/shopping').post( isLogin, asyncHandler( async (req,res) => {

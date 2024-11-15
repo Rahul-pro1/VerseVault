@@ -5,20 +5,23 @@ import { spawn } from 'child_process'
 
 const book_id_gen = createUniqueIdGenerator()
 
-async function bookSearch(req,res) {
-    const { query } = req.body
-    console.log("Query ", query);
-    const [records] = await pool.query(`select * from books where title = ?`, [query])
-    const [records_author] = await pool.query(`select * from books where author = ?`, [query])
-    console.log(records)
-    let res_array=[...records, ...records_author]
-    return res.status(200).json(res_array)
+async function bookSearch(req, res) {
+    try {
+        const { query } = req.body;
+        const [records] = await pool.query(`SELECT * FROM books WHERE title = ?`, [query]);
+        const [records_author] = await pool.query(`SELECT * FROM books WHERE author = ?`, [query]);
+        const combinedRecords = [...records, ...records_author];
+        return res.json(combinedRecords);
+    } catch (error) {
+        console.error("Error fetching book records:", error);
+        return res.status(500).json({ error: "An error occurred while fetching records" });
+    }
 }
 
 
 async function recommend(req, res) {
-    const ordered = ['Animal Farm', 'Animal Farm / 1984', 'Animal Dreams']; //Since orders table wasn't ready yet
-    // const [ordered] = await pool.query(`select books.title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user)
+    const ordered = ['Animal Farm', 'Animal Farm / 1984', 'Animal Dreams']; // Placeholder data since orders table wasn't ready yet
+    // const [ordered] = await pool.query(`select books.title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user);
 
     const recommendationsPromises = ordered.map((book) => {
         return new Promise((resolve, reject) => {
@@ -37,7 +40,7 @@ async function recommend(req, res) {
 
             pythonProcess.on('close', (code) => {
                 if (code === 0) {
-                    resolve(output);  
+                    resolve(output);
                 } else {
                     reject(`Process exited with code ${code}`);
                 }
@@ -46,17 +49,41 @@ async function recommend(req, res) {
     });
 
     try {
-        const recommendations = await Promise.all(recommendationsPromises);
-        res.json(recommendations);  
+        let recommendations = await Promise.all(recommendationsPromises);
+
+        recommendations = recommendations.flatMap(item => {
+            try {
+                return JSON.parse(item).map(innerArray => innerArray[0]);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                return [];
+            }
+        });
+
+        recommendations = await Promise.all(
+            recommendations.map(async (title) => {
+                const [foundBook] = await pool.query('SELECT * FROM books WHERE title = ?', [title]);
+                return foundBook.length > 0 ? foundBook[0] : null; // Return book details if found, otherwise null
+            })
+        );
+
+        recommendations = recommendations.filter(book => book !== null);
+        console.log(recommendations)
+        res.json(recommendations);
     } catch (error) {
         console.error("Error generating recommendations:", error);
         res.status(500).send("Error generating recommendations");
     }
 }
 
+
 async function viewBook(req, res) {
+    console.log("In viewBook")
     const { id } = req.params
-    const [record] = await pool.query(`select * from books where id = ?`, [id])
+    console.log("id", req.params)
+    const [record] = await pool.query(`select * from books where book_id = ?`, [id])
+    console.log(record[0])
+    // const [avg_rating] = await pool.query(`select avg(rating) from (select * from reviews where book_id)`) 
     return res.json(record[0])
 }
 
@@ -175,4 +202,27 @@ async function updateBook(req, res) {
     return res.status(200).json({ success: true })
 }
 
-export { bookSearch, viewBook, newBook, recommend, updateBook, buy }
+async function getVendorBooks(req, res) {
+    console.log("In getVendorBooks")
+    try {
+        const [records] = await pool.query(`SELECT * FROM books WHERE vendor_username = ?`, [req.session.user]);
+        return res.json(records);
+    } catch (error) {
+        console.error("Error fetching book records:", error);
+        return res.status(500).json({ error: "An error occurred while fetching records" });
+    }
+}
+
+async function addReviews(req, res) {
+    console.log("In addReviews")
+    const review_id = uuidv4()
+    const { content, rating } = req.body
+    const { book_id } = req.params
+    const customer_username = req.session.user
+
+    const [query] = await pool.query(`insert into reviews (review_id, customer_username, book_id, content, rating) values (?, ?, ?, ?, ?)`, [review_id, customer_username, book_id, content, rating])
+    console.log(query)
+    return res.status(200).json({ success: true })
+}
+
+export { bookSearch, viewBook, newBook, recommend, updateBook, buy, getVendorBooks, addReviews }
