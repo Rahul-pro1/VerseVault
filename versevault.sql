@@ -46,17 +46,6 @@ CREATE TABLE reviews (
 );
 
 CREATE TABLE orders (
-<<<<<<< HEAD
-    order_id VARCHAR(10) PRIMARY KEY,
-    book_id VARCHAR(10),
-    delivery_address VARCHAR(2000) NOT NULL,
-    payment_status VARCHAR(10) NOT NULL,
-    customer_username VARCHAR(20),
-    copies INT DEFAULT 1,
-    FOREIGN KEY (book_id) REFERENCES books(book_id),
-    FOREIGN KEY (customer_username) REFERENCES customer(customer_username)
-);
-=======
     order_id VARCHAR(100) PRIMARY KEY,
     book_id VARCHAR(100),
     delivery_address VARCHAR(2000) NOT NULL,
@@ -68,7 +57,6 @@ CREATE TABLE orders (
 
 ALTER TABLE orders ADD COLUMN mode_of_payment ENUM("Online", "Cash on delivery");
 ALTER TABLE orders MODIFY COLUMN payment_status ENUM("Paid", "Pending");
->>>>>>> bb99fd4d8c47dc5d82b42462b5653d37ee2b3220
 
 DELIMITER //
 CREATE TRIGGER vendor_delete 
