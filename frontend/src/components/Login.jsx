@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Nav from './Nav';
 import { useContext } from 'react';
@@ -11,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("")
 
   const { user, setUser } = useContext(MyContext)
+  const navigate = useNavigate()
 
   async function handleLogin(e){
 
@@ -28,8 +29,8 @@ const Login = () => {
         }
       )
   
-      console.log(response.data);
       setUser(response.data)
+      navigate('/')
     } catch (error) {
       console.log(error);
     }

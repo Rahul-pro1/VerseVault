@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Nav from './Nav.jsx';
 
 axios.defaults.withCredentials = true; // Enable cookies for cross-origin requests
@@ -15,6 +15,8 @@ const UpdateBook = () => {
   const [plot, setPlot] = useState('');
   const [book_price, setBook_price] = useState('');
   const [copies, setCopies] = useState('');
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchBookData() {
@@ -41,7 +43,7 @@ const UpdateBook = () => {
 
     try {
       const response = await axios.put(`/api/v1/books/${id}`, { title, author, genre, plot, book_price, copies });
-      console.log(response.data);
+      navigate(`/view/${ id }`)
     } catch (error) {
       console.error("Error updating book:", error);
     }

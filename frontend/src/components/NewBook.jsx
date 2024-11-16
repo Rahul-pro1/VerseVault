@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Nav from './Nav.jsx'
 
 axios.defaults.withCredentials = true; // Enable cookies for cross-origin requests
@@ -15,14 +15,15 @@ const NewBook = () => {
   const [book_cover, setBook_cover] = useState(null)
   const [copies, setCopies] = useState(0)
 
+  const navigate = useNavigate()
+
   async function handleSubmit(e){
 
     e.preventDefault()
 
     try {
-      // console.log("FORM DATA", formData)
       const response = await axios.post("/api/v1/books/new", { title, author, genre, plot, book_price, book_cover, copies })
-      console.log(response.data);
+      navigate('/viewBook')
   
     } catch (error) {
       console.log(error);

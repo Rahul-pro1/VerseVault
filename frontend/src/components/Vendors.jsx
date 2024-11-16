@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Nav from './Nav';
 
 const Vendors = () => {
   const [vendors, setVendors] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function getVendors() {
@@ -18,7 +19,7 @@ const Vendors = () => {
   async function handleDelete(username) {
     try {
         const res = await axios.delete(`/api/v1/admin/delete/${ username }`) 
-        console.log(res.data)
+        Navigate('/vendors')
     } catch (err) {
         console.log(err)
     }

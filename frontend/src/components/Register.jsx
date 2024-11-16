@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Nav from './Nav.jsx';
 
 axios.defaults.withCredentials = true; // Enable cookies for cross-origin requests
@@ -14,6 +14,7 @@ const Register = () => {
   const [confirm_password, setConfirm_password] = useState("");
   const [contact, setContact] = useState("");
   const [profile, setProfile] = useState(null);
+  const navigate = useNavigate()
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -30,8 +31,7 @@ const Register = () => {
 
     try {
       const response = await axios.post("/api/v1/users/register", formData);
-      console.log(response.data);
-  
+      navigate('/login')
     } catch (error) {
       console.log(error);
     }

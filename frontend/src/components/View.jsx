@@ -1,18 +1,19 @@
 'use client'
 
 import { useState, useEffect, useContext } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import Nav from './Nav'
 import { MyContext } from '../MyContext'
+import { StarIcon } from '@heroicons/react/20/solid'
 
 axios.defaults.withCredentials = true;
 
 export default function View() {
   const [book, setBook] = useState({})
-  const [reviews, setReviews] = useState([])
   const { id } = useParams()
   const { user, setUser } = useContext(MyContext)
+  const navigate = useNavigate()
 
   console.log("id", id)
 
@@ -21,9 +22,6 @@ export default function View() {
       const res = await axios.get(`/api/v1/books/${ id }`)
       console.log(res.data)
       setBook(res.data)
-      // const review_res = await axios.get(`/api/v1/books/${ id }/reviews`)
-      // console.log(review_res.data)
-      // setReviews(review_res.data)
     }
     viewBook()
   }, [])
@@ -33,7 +31,7 @@ export default function View() {
       evt.preventDefault()
       console.log("Book id", id)
       const res = await axios.post('/api/v1/users/shopping', { book_id: id, copies: 1 })
-      console.log(res.data)
+      navigate('/cart')
     } catch (err) {
       console.log(err)
     }
@@ -60,27 +58,23 @@ export default function View() {
             <p className="text-xl tracking-tight text-gray-900"><strong>Price: </strong>{book.book_price}</p>
 
             {/* Reviews */}
-            {/* <div className="mt-6">
+            <div className="mt-6">
               <h3 className="sr-only">Reviews</h3>
               <div className="flex items-center">
-                <div className="flex items-center">
-                  {[0, 1, 2, 3, 4].map((rating) => (
-                    <StarIcon
-                      // key={rating}
-                      aria-hidden="true"
-                      className={classNames(
-                        reviews.average > rating ? 'text-gray-900' : 'text-gray-200',
-                        'h-5 w-5 shrink-0',
-                      )}
-                    />
-                  ))}
-                </div>
-                <p className="sr-only">{reviews.average} out of 5 stars</p>
-                <a href={reviews.href} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                  {reviews.totalCount} reviews
-                </a>
+              <div className="flex items-center">
+                {[1, 2, 3, 4, 5].map((index) => (
+                  <StarIcon
+                    key={index}
+                    aria-hidden="true"
+                    className={`h-5 w-5 ${
+                      index <= book.avg_rating ? 'text-indigo-600' : 'text-gray-300'
+                    }`}
+                  />
+                ))}
               </div>
-            </div> */}
+              <p className='text-gray-900'>{book.avg_rating} out of 5 stars</p>
+              </div>
+            </div>
           {
             user.role === "customer" ? (
               <form className="mt-10" method="POST" onSubmit={handleSubmit}>
@@ -91,11 +85,11 @@ export default function View() {
                     alt="Book cover"
                   />
                 </div>
-                {/* <button
+                <button
                   className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                  <Link to={`/review/:id`} className='text-white'>Add review</Link>
-                </button> */}
+                  <Link to={`/review/${ id }`} className='text-white'>Add review</Link>
+                </button>
                 <button
                   type="submit"
                   className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -143,7 +137,37 @@ export default function View() {
             </div>
 
             <div className="mt-10">
-              <h2 className="text-sm font-medium text-gray-900">Details</h2>
+              <h2 className="text-sm font-medium text-gray-900">Reviews</h2>
+              <ul role="list" className="divide-y divide-gray-100">
+              {book.reviews?.map((review) => (
+                <li key={review.review_id} className="flex justify-between gap-x-6 py-5">
+                  <div className="flex min-w-0 gap-x-4">
+                    <div className="min-w-0 flex-auto">
+                      <p className="text-sm font-semibold text-gray-900">
+                        {review.customer_username}
+                      </p>
+                      <p className="mt-1 truncate text-xs text-gray-500">
+                        {review.content}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                    <p className="text-sm text-gray-900">{review.rating} / 5</p>
+                    <div className="flex items-center">
+                      {[1, 2, 3, 4, 5].map((index) => (
+                        <StarIcon
+                          key={index}
+                          aria-hidden="true"
+                          className={`h-5 w-5 ${
+                            index <= review.rating ? 'text-indigo-600' : 'text-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
 
             </div>
           </div>

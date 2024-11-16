@@ -7,11 +7,14 @@ function Recommend() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
 
+
   useEffect(() => {
+    setLoading(true);      
     async function recommend() {
         const res = await axios.get(`/api/v1/books/recommend`)
         console.log(res.data)
         setBooks(res.data)
+        setLoading(false)
     }
     recommend()
   }, []);

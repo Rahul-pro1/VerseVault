@@ -1,6 +1,10 @@
+'use client'
+
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import Nav from './Nav.jsx'
 
 axios.defaults.withCredentials = true; // Enable cookies for cross-origin requests
@@ -8,18 +12,16 @@ axios.defaults.withCredentials = true; // Enable cookies for cross-origin reques
 const Review = () => {
 
   const [content, setContent] = useState('')
-  const [rating, setRating] = useState(null)
+  const [rating, setRating] = useState(5)
   const { id } = useParams()
-
+  const navigate = useNavigate()
   async function handleSubmit(e){
 
     e.preventDefault()
 
     try {
-      // console.log("FORM DATA", formData)
-      const response = await axios.post(`/api/v1/books/:id/review`, { title, author, genre, plot, book_price, book_cover, copies })
-      console.log(response.data);
-  
+      const response = await axios.post(`/api/v1/books/${ id }/review`, { content, rating })
+      navigate(`/view/${ id }`)
     } catch (error) {
       console.log(error);
 
@@ -33,7 +35,7 @@ const Review = () => {
       {/* Register Form Section with Background Image */}
       <section 
         className="flex-grow flex items-center justify-center text-center py-20 bg-cover bg-center relative"
-        style={{ backgroundImage: `url('/library.jpg')` }} // Replace with correct path to your uploaded image
+        style={{ backgroundImage: `url('/library.jpg')` }} 
       >
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-purple-700 to-blue-800 opacity-70"></div>
@@ -45,67 +47,58 @@ const Review = () => {
             </div>
           </div>
         </nav>
-          <h2 className="text-4xl font-bold mb-4 text-purple-300">Add a New Book</h2>
-          <p className="text-gray-300 mb-6">Post your books here!</p>
+          <h2 className="text-4xl font-bold mb-4 text-purple-300">Review this Book!</h2>
+          <p className="text-gray-300 mb-6">How did you like this book? Please leave us a review so we can understand you better!</p>
 
           <form className="space-y-4" onSubmit={handleSubmit} method='POST'>
             <input 
               type="text" 
-              placeholder="Title" 
-              name='title'
+              placeholder="Review" 
+              name='review'
               className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setTitle(e.target.value) }
+              onChange={ (e) => setContent(e.target.value) }
             />
-            <input 
-              type="text" 
-              placeholder="Author" 
-              name='author'
-              className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setAuthor(e.target.value) }
-            />
-            <input 
-              type="text" 
-              placeholder="Genre" 
-              name='genre'
-              className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setGenre(e.target.value) }
-            />
-            <input 
-              type="text" 
-              placeholder="Plot" 
-              name='plot'
-              className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setPlot(e.target.value) }
-            />
-            <input 
-              type="number" 
-              placeholder="Price" 
-              name='book_price'
-              className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setBook_price(e.target.value) }
-            />
-            <input 
-              type="number" 
-              placeholder="Copies" 
-              name='copies'
-              className="w-full p-3 rounded bg-gray-700 text-white"
-              onChange={ (e) => setCopies(e.target.value) }
-            />
-            {/* Custom file upload styling */}
-            <label className="w-full flex flex-col items-center px-4 py-3 bg-gray-700 text-white rounded cursor-pointer">
-            <span>Upload Book Cover</span>
-            <input 
-              type="file" 
-              name="book_cover"
-              className="hidden" 
-              onChange={(e) => setBook_cover(e.target.files[0])} // use files[0] for file object
-            />
-          </label>
+            <Listbox value={rating} onChange={setRating}>
+              <Label className="block text-sm/6 font-medium text-purple-300">Rating</Label>
+              <div className="relative mt-2">
+                <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm/6">
+                  <span className="flex items-center">
+                    <span className="ml-3 block truncate">{rating}</span>
+                  </span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                    <ChevronUpDownIcon aria-hidden="true" className="size-5 text-gray-400" />
+                  </span>
+                </ListboxButton>
+
+                <ListboxOptions
+                  transition
+                  className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in sm:text-sm"
+                >
+                  {[1,2,3,4,5].map((rating) => (
+                    <ListboxOption
+                      key={rating}
+                      value={rating}
+                      className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-indigo-600 data-[focus]:text-white"
+                    >
+                      <div className="flex items-center">
+                        <span className="ml-3 block truncate font-normal group-data-[selected]:font-semibold">
+                          {rating}
+                        </span>
+                      </div>
+
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-[focus]:text-white [.group:not([data-selected])_&]:hidden">
+                        <CheckIcon aria-hidden="true" className="size-5" />
+                      </span>
+                    </ListboxOption>
+                  ))}
+                </ListboxOptions>
+              </div>
+            </Listbox>
             <button 
               type="submit" 
               className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-6 rounded-lg shadow-lg transition duration-300"
             >
-              Add Book!
+              Post your review!
             </button>
           </form>
 

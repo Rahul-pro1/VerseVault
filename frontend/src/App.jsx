@@ -12,6 +12,7 @@ import { MyContext } from './MyContext'
 import { useState } from 'react'
 import Vendors from './components/Vendors'
 import ViewBooks from './components/ViewBooks'
+import Review from './components/Review'
 
 export default function App() {
   const [user, setUser] = useState({})
@@ -31,7 +32,7 @@ export default function App() {
         <Route path='/update/:id' element={<UpdateBook/>}/>
         <Route path='/recommend' element={<Recommend/>}/>
         <Route path='/vendors' element={<Vendors/>}/>
-        {/* <Route path='/review/:id' element={<Review/>}/> */}
+        <Route path='/review/:id' element={<Review/>}/>
       </Routes>
       </Router>
     </MyContext.Provider>

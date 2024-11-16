@@ -10,8 +10,8 @@ function BookSearch() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    setLoading(true);  // Start loading
-    setBooks([]);      // Clear previous results
+    setLoading(true);  
+    setBooks([]);      
 
     try {
       console.log("QUERY", query);

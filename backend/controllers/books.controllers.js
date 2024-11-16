@@ -81,11 +81,14 @@ async function recommend(req, res) {
 async function viewBook(req, res) {
     console.log("In viewBook")
     const { id } = req.params
-    console.log("id", req.params)
     const [record] = await pool.query(`select * from books where book_id = ?`, [id])
-    console.log(record[0])
-    // const [avg_rating] = await pool.query(`select avg(rating) from (select * from reviews where book_id)`) 
-    return res.json(record[0])
+    const [avg_rating] = await pool.query(`select avg(cast(rating as unsigned)) as avg_rating from (select rating from reviews where book_id=?) as ratings`, [id]) 
+    const [reviews] = await pool.query(`select * from reviews where book_id=?`, [id])
+    const rec = record[0]
+    rec.avg_rating = avg_rating[0].avg_rating
+    rec.reviews = reviews
+    console.log("REC", rec)
+    return res.json(rec)
 }
 
 async function newBook(req, res) {
@@ -233,10 +236,10 @@ async function addReviews(req, res) {
     console.log("In addReviews")
     const review_id = uuidv4()
     const { content, rating } = req.body
-    const { book_id } = req.params
+    const { id } = req.params
     const customer_username = req.session.user
 
-    const [query] = await pool.query(`insert into reviews (review_id, customer_username, book_id, content, rating) values (?, ?, ?, ?, ?)`, [review_id, customer_username, book_id, content, rating])
+    const [query] = await pool.query(`insert into reviews (review_id, customer_username, book_id, content, rating) values (?, ?, ?, ?, ?)`, [review_id, customer_username, id, content, rating])
     console.log(query)
     return res.status(200).json({ success: true })
 }
