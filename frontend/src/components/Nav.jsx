@@ -28,6 +28,7 @@ const Nav = () => {
                 {(user.role == "vendor") ? <Link to="/new" className="book-link">Add Book</Link> : <></>}
                 {(user.role == "vendor") ? <Link to="/viewBook" className="book-link">View My Books</Link> : <></>}
                 {(user.role == "admin") ? <Link to="/vendors" className="book-link">Book Vendors</Link> : <></>}
+                {(user.role == "admin") ? <Link to="/customers" className="book-link">Customers</Link> : <></>}
                 {(user.role == "customer" || user.role == "vendor" || user.role == "admin") ? <Link to="#" onClick = {logout} className="book-link">Logout</Link> : <></>}
 
             </div>

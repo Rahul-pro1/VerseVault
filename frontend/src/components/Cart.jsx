@@ -59,7 +59,7 @@ const Cart = () => {
                         type="button"
                         className="font-medium text-indigo-600 hover:text-indigo-500"
                       >
-                        Buy
+                        <Link to={`/buy/${ book.book_id }`}>Buy</Link>
                       </button>
                     </div>
                   </div>

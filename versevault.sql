@@ -5,7 +5,8 @@ CREATE TABLE customer (
     customer_email varchar(50) NOT NULL,
     customer_contact varchar(15) NOT NULL,
     customer_password varchar(80) NOT NULL,
-    profile varchar(100) 
+    profile varchar(100),
+    tokens DECIMAL(10, 2) DEFAULT 0.00
 );
 
 CREATE TABLE vendor (
@@ -59,6 +60,41 @@ ALTER TABLE orders ADD COLUMN mode_of_payment ENUM("Online", "Cash on delivery")
 ALTER TABLE orders MODIFY COLUMN payment_status ENUM("Paid", "Pending");
 
 DELIMITER //
+
+CREATE FUNCTION IsCopiesGreaterThan(IN_book_id VARCHAR(100), IN_value INT)
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+    DECLARE copies_count INT;
+
+    SELECT copies INTO copies_count
+    FROM books
+    WHERE books.book_id = IN_book_id; 
+
+    RETURN copies_count > IN_value;
+END;
+//
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE GetAverageRating(IN book VARCHAR(100), OUT avg_rating DECIMAL(10, 2))
+BEGIN
+    SELECT AVG(CAST(rating AS UNSIGNED)) AS avg_rating
+    INTO avg_rating
+    FROM (
+        SELECT rating
+        FROM reviews
+        WHERE book_id = book
+    ) AS ratings;
+END;
+//
+
+DELIMITER ;
+
+DELIMITER //
 CREATE TRIGGER vendor_delete 
 BEFORE DELETE
 ON vendor
@@ -102,6 +138,7 @@ BEGIN
 END;
 //
 DELIMITER ;
+
 
 
 
