@@ -35,7 +35,7 @@ booksRouter.route('/new').post(isLogin, checkVendor, upload.single("book_cover")
     newBook(req, res);
 } ) )
 
-booksRouter.route('/buy').post(isLogin, asyncHandler( async (req,res) => {
+booksRouter.route('/:id/buy').post(isLogin, asyncHandler( async (req,res) => {
     buy(req,res)
 } ))
 booksRouter.route('/:id').put(checkVendor, asyncHandler( async (req,res) => {

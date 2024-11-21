@@ -3,22 +3,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Nav from './Nav';
 
-const Vendors = () => {
-  const [vendors, setVendors] = useState([])
+const Customers = () => {
+  const [customers, setCustomers] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
-    async function getVendors() {
-      const res = await axios.get('/api/v1/admin/vendors')
-      setVendors(res.data)
+    async function getCustomers() {
+      const res = await axios.get('/api/v1/admin/customers')
+      console.log(res.data)
+      setCustomers(res.data)
     }
-    getVendors()
+    getCustomers()
   }, [])
 
-  async function handleDelete(username) {
+  async function handleTokens(username) {
     try {
-        const res = await axios.delete(`/api/v1/admin/delete/${ username }`) 
-        navigate('/vendors')
+        const res = await axios.put(`/api/v1/admin/${ username }`) 
+        navigate('/customers')
     } catch (err) {
         console.log(err)
     }
@@ -34,12 +35,12 @@ const Vendors = () => {
         {/* <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-purple-900 opacity-80"></div> */}
         {/* <div className="mt-8 max-w-2xl w-full bg-white rounded-lg shadow-lg overflow-hidden"> */}
         <div className="bg-white grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 p-8">
-      {vendors.map((vendor) => (
-        <li key={vendor.vendor_username} className="flex py-6">
+      {customers.map((customer) => (
+        <li key={customer.customer_username} className="flex py-6">
           <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
             <img
               alt=""
-              src={vendor.profile}
+              src={customer.profile}
               className="size-full object-cover object-center"
             />
           </div>
@@ -48,17 +49,18 @@ const Vendors = () => {
             <div>
               <div className="flex justify-between text-base font-medium text-gray-900">
                 <h3>
-                  <a>{vendor.vendor_username}</a>
+                  <a>{customer.customer_username}</a>
                 </h3>
-                <p className="ml-4">{vendor.vendor_email}</p>
+                <p className="ml-4">{customer.customer_email}</p>
               </div>
-              <p className="mt-1 text-sm text-gray-500">{vendor.vendor_contact}</p>
+              <p className="mt-1 text-sm text-gray-500">{customer.customer_contact}</p>
             </div>
             <div className="flex flex-1 items-end justify-between text-sm">
+              <p className="text-gray-500">{customer.tokens}</p>
 
               <div className="flex">
-                <button type="button" onClick={() => handleDelete(vendor.vendor_username)} className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Delete
+                <button type="button" onClick={() => handleTokens(customer.customer_username)} className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Add tokens
                 </button>
               </div>
             </div>
@@ -76,4 +78,4 @@ const Vendors = () => {
   );
 };
 
-export default Vendors;
+export default Customers;

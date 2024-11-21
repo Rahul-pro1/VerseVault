@@ -91,23 +91,28 @@ const Cart = () => {
                     placeholder="Enter your address"
                   />
                 </div>
-                <div className="flex flex-col mb-4">
-                  <label htmlFor="modeOfPayment" className="text-left mb-2 font-medium">
-                    Mode of Payment:
-                  </label>
-                  <select
-                    id="modeOfPayment"
-                    value={modeOfPayment}
-                    onChange={(e) => setModeOfPayment(e.target.value)}
-                    className="p-2 border rounded"
-                  >
-                    <option value="" disabled>
-                      Select payment mode
-                    </option>
-                    <option value="credit_card">Credit Card</option>
-                    <option value="paypal">PayPal</option>
-                    <option value="net_banking">Net Banking</option>
-                  </select>
+
+                <div className="ml-4 flex flex-1 flex-col">
+                  <div>
+                    <div className="flex justify-between text-base font-medium text-gray-900">
+                      <h3>
+                        <a>{book.title}</a>
+                      </h3>
+                      <p className="ml-4">{book.genre}</p>
+                    </div>
+                    {/* <p className="mt-1 text-sm text-gray-500">{book.plot}</p> */}
+                  </div>
+                  <div className="flex flex-1 items-end justify-between text-sm">
+                    <p className="text-gray-500">{book.vendor_username}</p>
+                    <div className="flex">
+                      <button
+                        type="button"
+                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        <Link to={`/buy/${ book.book_id }`}>Buy</Link>
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <button
                   type="button"

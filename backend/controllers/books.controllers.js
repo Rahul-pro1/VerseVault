@@ -16,7 +16,6 @@ async function bookSearch(req, res) {
     }
 }
 
-
 async function recommend(req, res) {
     // const ordered = ['Animal Farm', 'Animal Farm / 1984', 'Animal Dreams']; // Placeholder data since orders table wasn't ready yet
     let [ordered] = await pool.query(`select books.title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user);
@@ -136,9 +135,12 @@ async function newBook(req, res) {
 }
 
 async function buy(req, res) {
-    console.log(`In buy route`);
+    console.log("In /buy", req.session.book)
+    const { address, mode_of_payment } = req.body;
+    let payment_status;
 
-    const { address, mode_of_payment, payment_status } = req.body;
+    if (mode_of_payment === "Online") payment_status = "Paid"
+    else payment_status = "Pending"
 
     if (!(address && mode_of_payment && payment_status)) {
         console.log(`Info not received!`);
@@ -152,13 +154,11 @@ async function buy(req, res) {
 
     const connection = await pool.getConnection();
     try {
-        // Start transaction
         await connection.beginTransaction();
 
         let orderId;
 
         for (let book of req.session.book) {
-            // Check if book exists
             const [isBooks] = await connection.query(`SELECT * FROM books WHERE book_id = ?`, [book.id]);
             if (isBooks.length === 0) {
                 console.log(`Book id is invalid!`);
@@ -168,33 +168,32 @@ async function buy(req, res) {
             const [result] = await pool.query(`SELECT IsCopiesGreaterThan(?, ?) AS is_greater`, [book.id, 1]);
             console.log(result[0].is_greater); 
 
-            // Check if enough copies are available
             if (!result[0].is_greater) {
                 console.log(`Not enough copies available for book ID ${book.id}`);
                 return res.send(`Not enough copies available for book ID ${book.id}`);
             }
 
-            // Update copies in the books table
-            await connection.query(`UPDATE books SET copies = copies - ? WHERE book_id = ?`, [book.copies, book.id]);
+            await connection.query(`UPDATE books SET copies = copies - ? WHERE book_id = ?`, [book.copies, book.book_id]);
+            
+            if (mode_of_payment == 'Online') {
+                await connection.query(`UPDATE customer SET tokens = tokens - ?*? WHERE customer_username = ?`, [book.copies, isBooks[0].book_price, req.session.user]);
+            }
 
-            // Generate unique order ID
             orderId = uuidv4();
 
-            // Insert the order into the orders table
             await connection.query(
                 `INSERT INTO orders (order_id, book_id, delivery_address, payment_status, customer_username, mode_of_payment) VALUES (?, ?, ?, ?, ?, ?)`,
                 [orderId, book.id, address, payment_status, req.session.user, mode_of_payment]
             );
+            
 
             req.session.book=req.session.book.filter( b => b.id !== book.id )
         }
 
-        // Commit transaction
         await connection.commit();
         console.log("Order(s) placed successfully!");
         return res.send("Order(s) placed successfully!");
     } catch (error) {
-        // Rollback transaction if something goes wrong
         await connection.rollback();
         console.error('Error processing the order:', error);
         return res.send('Error processing the order!');

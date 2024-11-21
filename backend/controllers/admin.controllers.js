@@ -15,4 +15,17 @@ async function getVendors(req, res) {
   return res.json(vendors)
 }
 
-export { vendor_delete, getVendors }
+async function getCustomers(req, res) {
+  console.log("In getCustomers")
+  const [customers] = await pool.query(`select * from customer`)
+  return res.json(customers)
+}
+
+async function addTokens(req, res) {
+  console.log("In addTokens")
+  const { username } = req.params
+  const [query] = await pool.query(`update customer set tokens = tokens + 1 where customer_username=?`, [username])
+  return res.status(200).json({ success: true })
+}
+
+export { vendor_delete, getVendors, getCustomers, addTokens }
