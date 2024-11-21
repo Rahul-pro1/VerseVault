@@ -81,11 +81,13 @@ async function recommend(req, res) {
 async function viewBook(req, res) {
     console.log("In viewBook")
     const { id } = req.params
+    console.log()
     const [record] = await pool.query(`select * from books where book_id = ?`, [id])
-    const [avg_rating] = await pool.query(`select avg(cast(rating as unsigned)) as avg_rating from (select rating from reviews where book_id=?) as ratings`, [id]) 
+    const [result] = await pool.query(`CALL GetAverageRating(?, @avg_rating)`, [id]);
+    const [avgRatingRow] = await pool.query(`SELECT @avg_rating AS avg_rating`);
     const [reviews] = await pool.query(`select * from reviews where book_id=?`, [id])
     const rec = record[0]
-    rec.avg_rating = avg_rating[0].avg_rating
+    rec.avg_rating = avgRatingRow[0].avg_rating
     rec.reviews = reviews
     console.log("REC", rec)
     return res.json(rec)
@@ -134,6 +136,8 @@ async function newBook(req, res) {
 }
 
 async function buy(req, res) {
+    console.log(`In buy route`);
+
     const { address, mode_of_payment, payment_status } = req.body;
 
     if (!(address && mode_of_payment && payment_status)) {
@@ -161,8 +165,11 @@ async function buy(req, res) {
                 return res.send(`Book id is invalid!`);
             }
 
+            const [result] = await pool.query(`SELECT IsCopiesGreaterThan(?, ?) AS is_greater`, [book.id, 1]);
+            console.log(result[0].is_greater); 
+
             // Check if enough copies are available
-            if (isBooks[0].copies < book.copies) {
+            if (!result[0].is_greater) {
                 console.log(`Not enough copies available for book ID ${book.id}`);
                 return res.send(`Not enough copies available for book ID ${book.id}`);
             }
@@ -243,5 +250,6 @@ async function addReviews(req, res) {
     console.log(query)
     return res.status(200).json({ success: true })
 }
+
 
 export { bookSearch, viewBook, newBook, recommend, updateBook, buy, getVendorBooks, addReviews }

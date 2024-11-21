@@ -249,11 +249,11 @@ async function getCart(req, res) {
 }
 
 async function admin(req,res){
-    const {username, name, password} = req.body
+    const {username, password} = req.body
 
     const hashed = await bcryptjs.hash(password, 12)
 
-    const query = await pool.query(`insert into admin values(?,?,?)`,[username, name, hashed])
+    const query = await pool.query(`insert into admin (admin_username, admin_password) values(?,?)`,[username, hashed])
 
     console.log([query])
 
