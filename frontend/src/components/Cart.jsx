@@ -5,8 +5,8 @@ import Nav from './Nav';
 const Cart = () => {
   const [books, setBooks] = useState([]);
   const [address, setAddress] = useState('');
-  const [modeOfPayment, setModeOfPayment] = useState(''); // e.g., "credit_card", "paypal"
-  const [paymentStatus, setPaymentStatus] = useState('pending'); // Default to 'pending'
+  const [modeOfPayment, setModeOfPayment] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState('pending');
 
   useEffect(() => {
     async function getCart() {
@@ -37,8 +37,6 @@ const Cart = () => {
 
       console.log('Order placed successfully:', res.data);
       alert('Order placed successfully!');
-
-      // Clear the cart upon successful order
       setBooks([]);
     } catch (error) {
       console.error('Failed to place order:', error);
@@ -77,6 +75,7 @@ const Cart = () => {
                   </li>
                 ))}
               </ul>
+
               <div className="mt-6">
                 <div className="flex flex-col mb-4">
                   <label htmlFor="address" className="text-left mb-2 font-medium">
@@ -91,28 +90,20 @@ const Cart = () => {
                     placeholder="Enter your address"
                   />
                 </div>
-
-                <div className="ml-4 flex flex-1 flex-col">
-                  <div>
-                    <div className="flex justify-between text-base font-medium text-gray-900">
-                      <h3>
-                        <a>{book.title}</a>
-                      </h3>
-                      <p className="ml-4">{book.genre}</p>
-                    </div>
-                    {/* <p className="mt-1 text-sm text-gray-500">{book.plot}</p> */}
-                  </div>
-                  <div className="flex flex-1 items-end justify-between text-sm">
-                    <p className="text-gray-500">{book.vendor_username}</p>
-                    <div className="flex">
-                      <button
-                        type="button"
-                        className="font-medium text-indigo-600 hover:text-indigo-500"
-                      >
-                        <Link to={`/buy/${ book.book_id }`}>Buy</Link>
-                      </button>
-                    </div>
-                  </div>
+                <div className="flex flex-col mb-4">
+                  <label htmlFor="modeOfPayment" className="text-left mb-2 font-medium">
+                    Payment Method:
+                  </label>
+                  <select
+                    id="modeOfPayment"
+                    value={modeOfPayment}
+                    onChange={(e) => setModeOfPayment(e.target.value)}
+                    className="p-2 border rounded"
+                  >
+                    <option value="">Select Payment Method</option>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="paypal">PayPal</option>
+                  </select>
                 </div>
                 <button
                   type="button"
@@ -128,7 +119,6 @@ const Cart = () => {
           <p>No books found in your cart.</p>
         )}
       </section>
-
       <footer className="bg-gray-900 text-gray-400 py-6 text-center">
         <p>&copy; {new Date().getFullYear()} Online Bookstore. All rights reserved.</p>
       </footer>

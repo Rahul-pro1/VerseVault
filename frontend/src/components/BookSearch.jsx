@@ -4,7 +4,7 @@ import Nav from "./Nav";
 import { Link } from "react-router-dom";
 
 function BookSearch() {
-  const [query, setQuery] = useState("");
+  let [query, setQuery] = useState("");
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -29,6 +29,31 @@ function BookSearch() {
     }
   };
 
+  // const handleSearch = async (e) => {
+  //   e.preventDefault();let query_sent=""
+
+  //   query.toLowerCase().split(" ").map( (q) => query_sent+=q+"+")
+
+  //   query_sent = query_sent.substring(0,empty.length-1)
+    
+  //   query=query_sent
+
+  //   try {
+  //     const response = await axios.post("/api/v1/books/",{ query })
+  
+  //     let data;
+  
+  //     data = Array.isArray(response.data) ? response.data : [response.data]
+  
+  //   } catch (error) {
+  //     console.error(error); 
+  //   }
+  //   finally{
+  //     setLoading(false)
+  //   }
+
+  // }
+
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Nav/>
@@ -50,11 +75,11 @@ function BookSearch() {
                 placeholder="Search for books..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="px-4 py-2 rounded-lg focus:outline-none w-64 text-black placeholder-gray-500"
+                className="px-4 py-2 rounded-lg focus:outline-none w-64 text-white placeholder-gray-500"
               />
               <button
                 type="submit"
-                className="text-black font-semibold px-4 py-2 rounded-lg hover:bg-gray-200 transition duration-200"
+                className="text-white font-semibold px-4 py-2 rounded-lg hover:bg-gray-200 transition duration-200"
               >
                 Search
               </button>
@@ -75,7 +100,7 @@ function BookSearch() {
                     <Link to={`/view/${ book.book_id }`} className="group" key={book.book_id}>
                     <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                       <img
-                        src={book.book_cover || "/default-cover.jpg"}  // Default image if cover is missing
+                        src={book.book_cover ?? "/default-cover.jpg"}  // Default image if cover is missing
                         alt={book.title}
                         className="h-full w-full object-cover object-center group-hover:opacity-75"
                       />

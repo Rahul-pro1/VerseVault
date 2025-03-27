@@ -1,7 +1,7 @@
 import {pool} from "../index.js"
 import { v4 as uuidv4 } from 'uuid';
 import { spawn } from 'child_process'
-
+import axios from 'axios'
 
 async function bookSearch(req, res) {
     try {
@@ -16,65 +16,100 @@ async function bookSearch(req, res) {
     }
 }
 
-async function recommend(req, res) {
-    // const ordered = ['Animal Farm', 'Animal Farm / 1984', 'Animal Dreams']; // Placeholder data since orders table wasn't ready yet
-    let [ordered] = await pool.query(`select books.title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user);
-    ordered = ordered.map(obj => {
-        return obj.title
-    })
-    console.log("ORDERED", ordered)
+// async function recommend(req, res) {
+//     // const ordered = ['Animal Farm', 'Animal Farm / 1984', 'Animal Dreams']; // Placeholder data since orders table wasn't ready yet
+//     let [ordered] = await pool.query(`select books.title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user);
+//     ordered = ordered.map(obj => {
+//         return obj.title
+//     })
+//     console.log("ORDERED", ordered)
 
-    const recommendationsPromises = ordered.map((book) => {
-        return new Promise((resolve, reject) => {
-            let output = "";
+//     const recommendationsPromises = ordered.map((book) => {
+//         return new Promise((resolve, reject) => {
+//             let output = "";
 
-            const pythonProcess = spawn('python', ['./recommender.py', book]);
+//             const pythonProcess = spawn('python', ['./recommender.py', book]);
 
-            pythonProcess.stdout.on('data', (data) => {
-                output += data.toString();
-            });
+//             pythonProcess.stdout.on('data', (data) => {
+//                 output += data.toString();
+//             });
 
-            pythonProcess.stderr.on('data', (data) => {
-                console.error(`Error: ${data}`);
-                reject(data.toString());
-            });
+//             pythonProcess.stderr.on('data', (data) => {
+//                 console.error(`Error: ${data}`);
+//                 reject(data.toString());
+//             });
 
-            pythonProcess.on('close', (code) => {
-                if (code === 0) {
-                    resolve(output);
-                } else {
-                    reject(`Process exited with code ${code}`);
-                }
-            });
-        });
-    });
+//             pythonProcess.on('close', (code) => {
+//                 if (code === 0) {
+//                     resolve(output);
+//                 } else {
+//                     reject(`Process exited with code ${code}`);
+//                 }
+//             });
+//         });
+//     });
+
+//     try {
+//         let recommendations = await Promise.all(recommendationsPromises);
+
+//         recommendations = recommendations.flatMap(item => {
+//             try {
+//                 return JSON.parse(item).map(innerArray => innerArray[0]);
+//             } catch (error) {
+//                 console.error("Error parsing JSON:", error);
+//                 return [];
+//             }
+//         });
+
+//         recommendations = await Promise.all(
+//             recommendations.map(async (title) => {
+//                 const [foundBook] = await pool.query('SELECT * FROM books WHERE title = ?', [title]);
+//                 return foundBook.length > 0 ? foundBook[0] : null; // Return book details if found, otherwise null
+//             })
+//         );
+
+//         recommendations = recommendations.filter(book => book !== null);
+//         console.log(recommendations)
+//         res.json(recommendations);
+//     } catch (error) {
+//         console.error("Error generating recommendations:", error);
+//         res.status(500).send("Error generating recommendations");
+//     }
+// }
+
+async function recommend(req,res) {
+    const [ordered] = await pool.query(`select title from books join orders on books.book_id = orders.book_id where orders.customer_username = ?`, req.session.user )
+    
+    let books = []
+
+    ordered.map( (book) => {
+        if(!books.includes(book.title)){
+            books.push(book.title)
+        }
+    } )
+
+    console.log('Books to send to Flask:', books); 
 
     try {
-        let recommendations = await Promise.all(recommendationsPromises);
-
-        recommendations = recommendations.flatMap(item => {
-            try {
-                return JSON.parse(item).map(innerArray => innerArray[0]);
-            } catch (error) {
-                console.error("Error parsing JSON:", error);
-                return [];
-            }
+        // Send the array of books to the Flask backend for recommendations
+        const result = await axios.post('http://localhost:5000/book_recommend', {
+            books: books
         });
 
-        recommendations = await Promise.all(
-            recommendations.map(async (title) => {
-                const [foundBook] = await pool.query('SELECT * FROM books WHERE title = ?', [title]);
-                return foundBook.length > 0 ? foundBook[0] : null; // Return book details if found, otherwise null
-            })
-        );
+        if (result.status !== 200) {
+            console.log('No recommendations received');
+            return res.status(500).send('Error fetching recommendations');
+        }
 
-        recommendations = recommendations.filter(book => book !== null);
-        console.log(recommendations)
-        res.json(recommendations);
+        // If the request was successful, log and send the recommendations back
+        // console.log('Recommendations:', result.data.recommendations);
+        res.json(result.data);
+
     } catch (error) {
-        console.error("Error generating recommendations:", error);
-        res.status(500).send("Error generating recommendations");
+        // console.error('Error during request to Flask backend:', error);
+        res.status(500).send('Error fetching recommendations');
     }
+
 }
 
 async function viewBook(req, res) {
